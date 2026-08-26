@@ -8884,8 +8884,21 @@ function updateMiniPlayerVisibility() {
 // читается как сжатие влево), а разворот обратно в большой вид — как плавное
 // "разрастание" вправо от того же левого края.
 let miniPlayerMorphTimer = null;
+// Запомненное "куда должны прийти" — а не текущее состояние класса .compact
+// на самом элементе. Раньше проверка шла по mini.classList.contains('compact'),
+// но сразу после закрытия одного блока (a2-item2/3/4) и мгновенного открытия
+// следующего класс ещё не успевал обновиться (смена происходит только внутри
+// отложенного таймера ниже, через 190мс) — второй вызов видел СТАРЫЙ класс,
+// решал, что менять нечего, и просто выходил (return), оставляя висеть
+// таймер от ПЕРВОГО вызова. Этот забытый таймер срабатывал чуть позже и
+// переключал .compact на своё (уже устаревшее) значение, из-за чего плеер
+// иногда оставался в обычном виде поверх разворота "Увлечения" вместо
+// компактного. Сравнение с miniPlayerCompactTarget вместо реального класса
+// всегда учитывает самый последний запрошенный вид и пересоздаёт таймер.
+let miniPlayerCompactTarget = null;
 function setMiniPlayerCompact(mini, compact) {
-    if (mini.classList.contains('compact') === compact) return;
+    if (miniPlayerCompactTarget === compact) return;
+    miniPlayerCompactTarget = compact;
     if (miniPlayerMorphTimer) clearTimeout(miniPlayerMorphTimer);
     mini.classList.add('mp-morphing');
     miniPlayerMorphTimer = setTimeout(() => {
