@@ -8854,17 +8854,19 @@ function updateMiniPlayerBufferedUI(pct, fullyLoaded) {
 // 1) есть выбранный трек (играет ИЛИ стоит на паузе — пауза не прячет плеер)
 // 2) пользователь НЕ находится в развороте "Любимый исполнитель" (a2-item1) —
 //    там уже есть свой плеер внутри разворота, дублировать не нужно.
-// В развороте "Моё хобби" (a2-item2) и "Увлечения" (a2-item3, оба суб-слоя)
-// мини-плеер, наоборот, не прячется, а переключается в компактный вид (класс
-// "compact") — обложка/play-pause/громкость остаются, имя/время/перемотка
-// скрываются (см. .mini-player.compact в CSS). Класс "playing" отвечает
-// только за иконку play/pause и переключается отдельно, независимо от
-// видимости и вида (обычный/компактный) самого плеера.
+// В разворотах "Моё хобби" (a2-item2), "Увлечения" (a2-item3, оба суб-слоя)
+// и "Интересные факты обо мне" (a2-item4) мини-плеер, наоборот, не прячется,
+// а переключается в компактный вид (класс "compact") — обложка/play-pause/
+// громкость остаются, имя/время/перемотка скрываются (см. .mini-player.compact
+// в CSS). Это же поднимает его z-index выше затемнения разворота (иначе он
+// оказывается визуально перекрыт — так и был обнаружен баг с a2-item4).
+// Класс "playing" отвечает только за иконку play/pause и переключается
+// отдельно, независимо от видимости и вида (обычный/компактный) самого плеера.
 function updateMiniPlayerVisibility() {
     const mini = document.getElementById('miniPlayer');
     if (!mini) return;
     const inArtistExpand = about2ExpandOpen && about2ExpandItemId === 'a2-item1';
-    const inCompactExpand = about2ExpandOpen && (about2ExpandItemId === 'a2-item2' || about2ExpandItemId === 'a2-item3');
+    const inCompactExpand = about2ExpandOpen && (about2ExpandItemId === 'a2-item2' || about2ExpandItemId === 'a2-item3' || about2ExpandItemId === 'a2-item4');
     const shouldShow = about2HasCurrentTrack() && !inArtistExpand;
     mini.classList.toggle('visible', shouldShow);
     mini.classList.toggle('playing', about2IsMusicPlaying());
