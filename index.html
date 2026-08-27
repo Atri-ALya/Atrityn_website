@@ -8155,10 +8155,17 @@ document.addEventListener('dragstart', function(e) {
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s ease;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            -webkit-touch-callout: default !important;
+        }
+
+        .about-pw-overlay,
+        .about-pw-card {
             user-select: text;
             -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
         }
 
         body.light-theme .about-pw-field input {
@@ -8223,31 +8230,198 @@ document.addEventListener('dragstart', function(e) {
         body.light-theme .about-pw-btn-cancel {
             border: 1px solid rgba(0, 0, 0, 0.15);
         }
+
+        .about-pw-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .about-pw-form {
+            display: block;
+            transition: opacity 0.2s ease;
+        }
+
+        .about-pw-card.submitting .about-pw-form {
+            display: none;
+        }
+
+        .about-pw-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 26px 10px;
+            gap: 14px;
+        }
+
+        .about-pw-card.submitting .about-pw-state {
+            display: flex;
+        }
+
+        .about-pw-circle {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.12);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        body.light-theme .about-pw-circle {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .about-pw-spinner {
+            position: absolute;
+            inset: -3px;
+            width: 78px;
+            height: 78px;
+            animation: about-pw-spin 0.9s linear infinite;
+        }
+
+        .about-pw-spinner-track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 3;
+        }
+
+        body.light-theme .about-pw-spinner-track {
+            stroke: rgba(0, 0, 0, 0.08);
+        }
+
+        .about-pw-spinner-arc {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 28 85;
+        }
+
+        @keyframes about-pw-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .about-pw-check,
+        .about-pw-cross {
+            display: none;
+            width: 34px;
+            height: 34px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .about-pw-card.result-success .about-pw-spinner,
+        .about-pw-card.result-fail .about-pw-spinner {
+            display: none;
+        }
+
+        .about-pw-card.result-success .about-pw-circle {
+            border-color: #3fb950;
+            background-color: rgba(63, 185, 80, 0.12);
+        }
+
+        .about-pw-card.result-fail .about-pw-circle {
+            border-color: #e5534b;
+            background-color: rgba(229, 83, 75, 0.12);
+        }
+
+        .about-pw-card.result-success .about-pw-check {
+            display: block;
+            color: #3fb950;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .about-pw-card.result-fail .about-pw-cross {
+            display: block;
+            color: #e5534b;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .about-pw-check-path {
+            stroke-dasharray: 24;
+            stroke-dashoffset: 24;
+            transition: stroke-dashoffset 0.35s ease 0.05s;
+        }
+
+        .about-pw-card.result-success .about-pw-check-path {
+            stroke-dashoffset: 0;
+        }
+
+        .about-pw-result-text {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+        }
+
+        .about-pw-card.result-success .about-pw-result-text,
+        .about-pw-card.result-fail .about-pw-result-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-pw-card.result-success .about-pw-result-text {
+            color: #3fb950;
+        }
+
+        .about-pw-card.result-fail .about-pw-result-text {
+            color: #e5534b;
+        }
     </style>
 
     <div class="about-pw-overlay" id="aboutPwOverlay">
-        <div class="about-pw-card">
-            <p class="about-pw-title" data-en="Private section" data-ru="Закрытый раздел">Закрытый раздел</p>
-            <p class="about-pw-subtitle" data-en="Enter the login and password you were given"
-               data-ru="Введите логин и пароль, которые вам выдали">Введите логин и пароль, которые вам выдали</p>
+        <div class="about-pw-card" id="aboutPwCard">
+            <div class="about-pw-form" id="aboutPwForm">
+                <p class="about-pw-title" data-en="Private section" data-ru="Закрытый раздел">Закрытый раздел</p>
+                <p class="about-pw-subtitle" data-en="Enter the login and password you were given"
+                   data-ru="Введите логин и пароль, которые вам выдали">Введите логин и пароль, которые вам выдали</p>
 
-            <div class="about-pw-field">
-                <label for="aboutPwLogin" data-en="Login" data-ru="Логин">Логин</label>
-                <input type="text" id="aboutPwLogin" autocomplete="username" autocapitalize="off" spellcheck="false">
+                <div class="about-pw-field">
+                    <label for="aboutPwLogin" data-en="Login" data-ru="Логин">Логин</label>
+                    <input type="text" id="aboutPwLogin" autocomplete="username" autocapitalize="off" spellcheck="false">
+                </div>
+                <div class="about-pw-field">
+                    <label for="aboutPwPassword" data-en="Password" data-ru="Пароль">Пароль</label>
+                    <input type="password" id="aboutPwPassword" autocomplete="current-password">
+                </div>
+
+                <p class="about-pw-error" id="aboutPwError" data-en="Wrong login or password"
+                   data-ru="Неверный логин или пароль">Неверный логин или пароль</p>
+
+                <div class="about-pw-actions">
+                    <button type="button" class="about-pw-btn about-pw-btn-cancel" id="aboutPwCancel"
+                            data-en="Cancel" data-ru="Отмена">Отмена</button>
+                    <button type="button" class="about-pw-btn about-pw-btn-submit" id="aboutPwSubmit"
+                            data-en="Enter" data-ru="Войти">Войти</button>
+                </div>
             </div>
-            <div class="about-pw-field">
-                <label for="aboutPwPassword" data-en="Password" data-ru="Пароль">Пароль</label>
-                <input type="password" id="aboutPwPassword" autocomplete="current-password">
-            </div>
 
-            <p class="about-pw-error" id="aboutPwError" data-en="Wrong login or password"
-               data-ru="Неверный логин или пароль">Неверный логин или пароль</p>
-
-            <div class="about-pw-actions">
-                <button type="button" class="about-pw-btn about-pw-btn-cancel" id="aboutPwCancel"
-                        data-en="Cancel" data-ru="Отмена">Отмена</button>
-                <button type="button" class="about-pw-btn about-pw-btn-submit" id="aboutPwSubmit"
-                        data-en="Enter" data-ru="Войти">Войти</button>
+            <div class="about-pw-state" id="aboutPwState">
+                <div class="about-pw-circle" id="aboutPwCircle">
+                    <svg class="about-pw-spinner" viewBox="0 0 44 44" aria-hidden="true">
+                        <circle class="about-pw-spinner-track" cx="22" cy="22" r="18"></circle>
+                        <circle class="about-pw-spinner-arc" cx="22" cy="22" r="18"></circle>
+                    </svg>
+                    <svg class="about-pw-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path class="about-pw-check-path" d="M4 12.5L9.5 18L20 6"></path>
+                    </svg>
+                    <svg class="about-pw-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path class="about-pw-cross-path" d="M6 6L18 18"></path>
+                        <path class="about-pw-cross-path" d="M18 6L6 18"></path>
+                    </svg>
+                </div>
+                <p class="about-pw-result-text" id="aboutPwResultText" data-en="" data-ru=""></p>
             </div>
         </div>
     </div>
@@ -8259,13 +8433,16 @@ document.addEventListener('dragstart', function(e) {
         var STORAGE_KEY = 'about2_unlocked';
 
         var overlay = document.getElementById('aboutPwOverlay');
+        var card = document.getElementById('aboutPwCard');
         var loginInput = document.getElementById('aboutPwLogin');
         var passwordInput = document.getElementById('aboutPwPassword');
         var errorEl = document.getElementById('aboutPwError');
         var submitBtn = document.getElementById('aboutPwSubmit');
         var cancelBtn = document.getElementById('aboutPwCancel');
+        var resultTextEl = document.getElementById('aboutPwResultText');
 
         var pendingOnSuccess = null;
+        var MIN_CHECK_DELAY_MS = 2000;
 
         function isUnlocked() {
             try {
@@ -8283,10 +8460,16 @@ document.addEventListener('dragstart', function(e) {
             }
         }
 
+        function isPageEnglish() {
+            return typeof isEnglish !== 'undefined' && !!isEnglish;
+        }
+
         function openOverlay() {
             errorEl.classList.remove('visible');
             loginInput.value = '';
             passwordInput.value = '';
+            card.classList.remove('submitting', 'result-success', 'result-fail');
+            submitBtn.disabled = false;
             overlay.classList.add('visible');
             setTimeout(function () { loginInput.focus(); }, 50);
         }
@@ -8294,11 +8477,19 @@ document.addEventListener('dragstart', function(e) {
         function closeOverlay() {
             overlay.classList.remove('visible');
             pendingOnSuccess = null;
+            setTimeout(function () {
+                card.classList.remove('submitting', 'result-success', 'result-fail');
+                submitBtn.disabled = false;
+            }, 250);
         }
 
         function setLoading(isLoading) {
             submitBtn.disabled = isLoading;
-            submitBtn.textContent = isLoading ? '…' : (submitBtn.getAttribute('data-ru') || 'Войти');
+        }
+
+        function showResult(success, text) {
+            resultTextEl.textContent = text;
+            card.classList.add(success ? 'result-success' : 'result-fail');
         }
 
         function submit() {
@@ -8308,6 +8499,14 @@ document.addEventListener('dragstart', function(e) {
 
             errorEl.classList.remove('visible');
             setLoading(true);
+            card.classList.add('submitting');
+            var startedAt = Date.now();
+
+            function reveal(fn) {
+                var elapsed = Date.now() - startedAt;
+                var wait = Math.max(0, MIN_CHECK_DELAY_MS - elapsed);
+                setTimeout(fn, wait);
+            }
 
             fetch(WORKER_URL, {
                 method: 'POST',
@@ -8316,33 +8515,45 @@ document.addEventListener('dragstart', function(e) {
             })
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
-                    setLoading(false);
-                    if (data && data.ok) {
-                        rememberUnlocked();
-                        if (window.updateAboutLockUI) window.updateAboutLockUI(true);
-                        var cb = pendingOnSuccess;
-                        closeOverlay();
-                        if (cb) cb();
-                    } else {
-                        errorEl.classList.add('visible');
-                    }
+                    reveal(function () {
+                        if (data && data.ok) {
+                            rememberUnlocked();
+                            if (window.updateAboutLockUI) window.updateAboutLockUI(true);
+                            showResult(true, isPageEnglish() ? 'Success' : 'Успешно');
+                            var cb = pendingOnSuccess;
+                            setTimeout(function () {
+                                closeOverlay();
+                                if (cb) cb();
+                            }, 700);
+                        } else {
+                            showResult(false, isPageEnglish() ? 'Denied' : 'Отказано');
+                            setTimeout(function () {
+                                closeOverlay();
+                            }, 900);
+                        }
+                    });
                 })
                 .catch(function () {
-                    setLoading(false);
-                    errorEl.textContent = (document.documentElement.lang === 'en')
-                        ? 'Connection error, try again'
-                        : 'Ошибка соединения, попробуйте снова';
-                    errorEl.classList.add('visible');
+                    reveal(function () {
+                        showResult(false, isPageEnglish() ? 'Connection error' : 'Ошибка соединения');
+                        setTimeout(function () {
+                            closeOverlay();
+                        }, 900);
+                    });
                 });
         }
 
         submitBtn.addEventListener('click', submit);
-        cancelBtn.addEventListener('click', closeOverlay);
+        cancelBtn.addEventListener('click', function () {
+            if (card.classList.contains('submitting')) return;
+            closeOverlay();
+        });
         overlay.addEventListener('click', function (e) {
-            if (e.target === overlay) closeOverlay();
+            if (e.target === overlay && !card.classList.contains('submitting')) closeOverlay();
         });
         [loginInput, passwordInput].forEach(function (input) {
             input.addEventListener('keydown', function (e) {
+                if (card.classList.contains('submitting')) return;
                 if (e.key === 'Enter') submit();
                 if (e.key === 'Escape') closeOverlay();
             });
