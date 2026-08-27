@@ -8143,10 +8143,15 @@ document.addEventListener('dragstart', function(e) {
             color: var(--subtitle-gray-light);
         }
 
+        .about-pw-input-wrap {
+            position: relative;
+            display: block;
+        }
+
         .about-pw-field input {
             width: 100%;
             box-sizing: border-box;
-            padding: 10px 12px;
+            padding: 10px 40px 10px 12px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.18);
             background: rgba(255, 255, 255, 0.05);
@@ -8160,6 +8165,45 @@ document.addEventListener('dragstart', function(e) {
             -moz-user-select: text !important;
             -ms-user-select: text !important;
             -webkit-touch-callout: default !important;
+        }
+
+        .about-pw-paste-btn {
+            position: absolute;
+            top: 50%;
+            right: 6px;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: inherit;
+            opacity: 0.55;
+            cursor: pointer;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .about-pw-paste-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        body.light-theme .about-pw-paste-btn:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .about-pw-paste-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .about-pw-paste-btn.pasted {
+            opacity: 1;
+            color: #3fb950;
         }
 
         .about-pw-overlay,
@@ -8389,11 +8433,27 @@ document.addEventListener('dragstart', function(e) {
 
                 <div class="about-pw-field">
                     <label for="aboutPwLogin" data-en="Login" data-ru="Логин">Логин</label>
-                    <input type="text" id="aboutPwLogin" autocomplete="username" autocapitalize="off" spellcheck="false">
+                    <div class="about-pw-input-wrap">
+                        <input type="text" id="aboutPwLogin" autocomplete="username" autocapitalize="off" spellcheck="false">
+                        <button type="button" class="about-pw-paste-btn" id="aboutPwLoginPaste" aria-label="Вставить" title="Вставить">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+                                <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="about-pw-field">
                     <label for="aboutPwPassword" data-en="Password" data-ru="Пароль">Пароль</label>
-                    <input type="password" id="aboutPwPassword" autocomplete="current-password">
+                    <div class="about-pw-input-wrap">
+                        <input type="password" id="aboutPwPassword" autocomplete="current-password">
+                        <button type="button" class="about-pw-paste-btn" id="aboutPwPasswordPaste" aria-label="Вставить" title="Вставить">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+                                <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <p class="about-pw-error" id="aboutPwError" data-en="Wrong login or password"
@@ -8542,6 +8602,43 @@ document.addEventListener('dragstart', function(e) {
                     });
                 });
         }
+
+        function flashPasted(btn) {
+            btn.classList.add('pasted');
+            setTimeout(function () { btn.classList.remove('pasted'); }, 900);
+        }
+
+        function pasteInto(input, btn) {
+            input.focus();
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                navigator.clipboard.readText().then(function (text) {
+                    if (text) {
+                        input.value = text;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        flashPasted(btn);
+                    }
+                }).catch(function () {
+                    var manual = window.prompt(isPageEnglish() ? 'Paste text here:' : 'Вставьте текст сюда:', '');
+                    if (manual) {
+                        input.value = manual;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        flashPasted(btn);
+                    }
+                });
+            } else {
+                var manual2 = window.prompt(isPageEnglish() ? 'Paste text here:' : 'Вставьте текст сюда:', '');
+                if (manual2) {
+                    input.value = manual2;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    flashPasted(btn);
+                }
+            }
+        }
+
+        var loginPasteBtn = document.getElementById('aboutPwLoginPaste');
+        var passwordPasteBtn = document.getElementById('aboutPwPasswordPaste');
+        loginPasteBtn.addEventListener('click', function () { pasteInto(loginInput, loginPasteBtn); });
+        passwordPasteBtn.addEventListener('click', function () { pasteInto(passwordInput, passwordPasteBtn); });
 
         submitBtn.addEventListener('click', submit);
         cancelBtn.addEventListener('click', function () {
