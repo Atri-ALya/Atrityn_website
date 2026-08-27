@@ -983,6 +983,18 @@ body.light-theme #my-photo-light {
             height: 100%;
         }
 
+        .home-clock-item-icon--photo {
+            width: 32px;
+            height: 22px;
+        }
+
+        .home-clock-item-icon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
         .home-clock-item-name {
             flex: 1;
             font-size: 0.92em;
@@ -9034,17 +9046,20 @@ document.addEventListener('dragstart', function(e) {
     (function () {
         var STORAGE_KEY = 'home_clock_selected_city';
 
-        var HOME_CITY = { id: 'home', kind: 'home', ru: 'atrityn', en: 'atrityn', tz: 'Europe/Moscow', lat: 55.7558, lon: 37.6176 };
+        var HOME_CITY = { id: 'home', kind: 'home', ru: 'atrityn', en: 'atrityn', tz: 'Europe/Moscow', lat: 55.7558, lon: 37.6176, icon: 'Moscow.png', iconBlue: 'Moscow-blue.png' };
 
         var PRESET_CITIES = [
-            { id: 'tokyo', kind: 'city', ru: 'Токио', en: 'Tokyo', tz: 'Asia/Tokyo', lat: 35.6762, lon: 139.6503 },
-            { id: 'newyork', kind: 'city', ru: 'Нью-Йорк', en: 'New York', tz: 'America/New_York', lat: 40.7128, lon: -74.0060 },
-            { id: 'london', kind: 'city', ru: 'Лондон', en: 'London', tz: 'Europe/London', lat: 51.5074, lon: -0.1278 },
-            { id: 'dubai', kind: 'city', ru: 'Дубай', en: 'Dubai', tz: 'Asia/Dubai', lat: 25.2048, lon: 55.2708 },
-            { id: 'paris', kind: 'city', ru: 'Париж', en: 'Paris', tz: 'Europe/Paris', lat: 48.8566, lon: 2.3522 },
-            { id: 'berlin', kind: 'city', ru: 'Берлин', en: 'Berlin', tz: 'Europe/Berlin', lat: 52.5200, lon: 13.4050 },
-            { id: 'singapore', kind: 'city', ru: 'Сингапур', en: 'Singapore', tz: 'Asia/Singapore', lat: 1.3521, lon: 103.8198 }
+            { id: 'tokyo', kind: 'city', ru: 'Токио', en: 'Tokyo', tz: 'Asia/Tokyo', lat: 35.6762, lon: 139.6503, icon: 'Tokyo.png', iconBlue: 'Tokyo-blue.png' },
+            { id: 'newyork', kind: 'city', ru: 'Нью-Йорк', en: 'New York', tz: 'America/New_York', lat: 40.7128, lon: -74.0060, icon: 'New_York.png', iconBlue: 'New_York-blue.png' },
+            { id: 'london', kind: 'city', ru: 'Лондон', en: 'London', tz: 'Europe/London', lat: 51.5074, lon: -0.1278, icon: 'London.png', iconBlue: 'London-blue.png' },
+            { id: 'dubai', kind: 'city', ru: 'Дубай', en: 'Dubai', tz: 'Asia/Dubai', lat: 25.2048, lon: 55.2708, icon: 'Dubai.png', iconBlue: 'Dubai-blue.png' },
+            { id: 'paris', kind: 'city', ru: 'Париж', en: 'Paris', tz: 'Europe/Paris', lat: 48.8566, lon: 2.3522, icon: 'Paris.png', iconBlue: 'Paris-blue.png' },
+            { id: 'berlin', kind: 'city', ru: 'Берлин', en: 'Berlin', tz: 'Europe/Berlin', lat: 52.5200, lon: 13.4050, icon: 'Berlin.png', iconBlue: 'Berlin-blue.png' },
+            { id: 'singapore', kind: 'city', ru: 'Сингапур', en: 'Singapore', tz: 'Asia/Singapore', lat: 1.3521, lon: 103.8198, icon: 'Singapore.png', iconBlue: 'Singapore-blue.png' }
         ];
+
+        // Папка с иконками городов (скайлайны).
+        var CITY_ICON_PATH = 'assets/City Icons/';
 
         // Словарь для русификации самых частых городов, которые может вернуть IP-геолокация.
         // Если города нет в словаре, будет показано оригинальное (латинское) название.
@@ -9520,11 +9535,17 @@ document.addEventListener('dragstart', function(e) {
             }
 
             cities.forEach(function (city) {
-                var icon = city.kind === 'home' ? HOME_ICON : (city.kind === 'ip' ? PIN_ICON : CITY_ICON);
                 var selected = city.id === selectedId;
+                var icon;
+                if (city.icon) {
+                    var iconSrc = (selected && city.iconBlue) ? city.iconBlue : city.icon;
+                    icon = '<img class="home-clock-item-icon-img" src="' + CITY_ICON_PATH + iconSrc + '" alt="">';
+                } else {
+                    icon = city.kind === 'home' ? HOME_ICON : (city.kind === 'ip' ? PIN_ICON : CITY_ICON);
+                }
                 var badge = city.kind === 'ip' ? (lang() === 'en' ? 'AUTO · ' : 'АВТО · ') + formatGmt(city.tz) : formatGmt(city.tz);
                 html += '<div class="home-clock-item' + (selected ? ' selected' : '') + '" data-city-id="' + city.id + '">' +
-                    '<span class="home-clock-item-icon">' + icon + '</span>' +
+                    '<span class="home-clock-item-icon' + (city.icon ? ' home-clock-item-icon--photo' : '') + '">' + icon + '</span>' +
                     '<span class="home-clock-item-name">' + cityDisplayName(city) + '</span>' +
                     '<span class="home-clock-item-badge">' + badge + '</span>' +
                     '<svg class="home-clock-item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg>' +
