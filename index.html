@@ -1010,10 +1010,11 @@ body.light-theme #my-photo-light {
             z-index: 1001;
             opacity: 0;
             pointer-events: none;
+            color: var(--arrow-color-dark);
 
             transform: scale(0.9) scale(var(--ui-scale, 1));
             transform-origin: top right;
-            transition: opacity 0.5s ease, transform 0.3s ease, border-color 0.8s ease;
+            transition: opacity 0.5s ease, transform 0.3s ease, border-color 0.8s ease, color 0.8s ease;
         }
 
         .about-layer-toggle.visible {
@@ -1032,6 +1033,7 @@ body.light-theme #my-photo-light {
 
         body.light-theme .about-layer-toggle {
             border-color: var(--arrow-color-light);
+            color: var(--arrow-color-light);
         }
 
         .about-layer-toggle .layer-arrow {
@@ -1052,6 +1054,37 @@ body.light-theme #my-photo-light {
         .about-layer-toggle.layer2 .layer-arrow {
             transform: rotate(180deg);
         }
+
+        .about-layer-toggle .about-layer-lock-icon {
+            display: none;
+            width: 16px;
+            height: 16px;
+            overflow: visible;
+        }
+
+        .about-layer-toggle.locked .layer-arrow {
+            display: none;
+        }
+
+        .about-layer-toggle.locked .about-layer-lock-icon {
+            display: block;
+        }
+
+        .about-layer-lock-shackle {
+            transform-box: fill-box;
+            transform-origin: 0% 100%;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .about-layer-toggle.unlocking .about-layer-lock-shackle {
+            transform: rotate(-40deg);
+        }
+
+        .about-layer-toggle.unlocking .about-layer-lock-icon {
+            transition: opacity 0.25s ease 0.3s;
+            opacity: 0;
+        }
+
 
         .language-toggle-button:hover {
             color: var(--primary-color);
@@ -4626,6 +4659,10 @@ html.has-touch-sensor #mobile-block-screen {
 
     <button class="about-layer-toggle" id="aboutLayerToggle" onclick="toggleAboutLayer()" aria-label="Переключить на второй слой Обо мне">
         <span class="layer-arrow"></span>
+        <svg class="about-layer-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+            <path class="about-layer-lock-shackle" d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+        </svg>
     </button>
 
     <div class="nav-container">
@@ -5252,15 +5289,12 @@ function navigateToSection(index) {
         return;
     }
 
-    // Обычный переход между разделами: слайд меняется одновременно
-    // с плавным движением кружка вверх/вниз по линии
+
+
     switchSlide();
     updateNavDot(index);
 }
 
-// Перемещает кружочек-индикатор на линии навигации к текущему пункту меню
-// и поворачивает стрелочки: у активного пункта — вправо (в сторону текста),
-// у остальных (включая "Главная") — влево.
 function updateNavDot(index) {
     const sideNav = document.querySelector('.side-nav');
     const navLinks = sideNav.querySelector('.nav-links');
@@ -5354,6 +5388,29 @@ function updateAboutToggleButton() {
 
     btn.classList.toggle('visible', currentSection === 1);
     btn.classList.toggle('layer2', isAboutLayer2);
+    updateAboutLockUI(false);
+}
+
+function updateAboutLockUI(animate) {
+    const btn = document.getElementById('aboutLayerToggle');
+    if (!btn) return;
+    const unlocked = window.isAboutLayer2Unlocked ? window.isAboutLayer2Unlocked() : false;
+
+    if (unlocked) {
+        if (!btn.classList.contains('locked')) return;
+        if (animate) {
+            btn.classList.add('unlocking');
+            setTimeout(() => {
+                btn.classList.remove('locked');
+                btn.classList.remove('unlocking');
+            }, 450);
+        } else {
+            btn.classList.remove('locked');
+        }
+    } else {
+        btn.classList.remove('unlocking');
+        btn.classList.add('locked');
+    }
 }
 
 document.querySelectorAll('.portfolio-item').forEach(item => {
@@ -5563,57 +5620,57 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
     if (photoPanel) { photoPanel.style.display = 'none'; photoPanel.style.opacity = ''; photoPanel.style.transition = ''; }
     if (metroSection) { metroSection.style.display = 'none'; metroSection.style.opacity = ''; metroSection.style.transition = ''; }
     if (metroStations) { metroStations.style.display = 'none'; metroStations.style.opacity = ''; metroStations.style.transition = ''; }
-    // "Интересные факты" (a2-item4) — сетка карточек+цитата, видимость
-    // которой управляется классом .has-facts (см. ниже), а не инлайн
-    // display, как у gallerySection/metroSection — поэтому тут только
-    // сброс opacity/transition на каждое открытие (сам display решает CSS).
+
+
+
+
     if (factsSection) { factsSection.style.opacity = ''; factsSection.style.transition = ''; }
-    // Картинка picture_4.png (боковая декорация) — та же логика сброса:
-    // display решает CSS-класс .has-facts, тут только снимаем инлайн
-    // display:none/opacity:0/transition:none, выставленные при закрытии
-    // слоя (см. closeAbout2Expand), иначе при повторном открытии она бы
-    // не показывалась.
+
+
+
+
+
     if (factsSideDecor) { factsSideDecor.style.display = ''; factsSideDecor.style.opacity = ''; factsSideDecor.style.transition = ''; }
-    // Картинка picture_3.png (боковая декорация "Увлечений") — та же
-    // логика сброса, что и у picture_4.png выше: display решает CSS-класс
-    // .has-hobbies, тут только снимаем инлайн display:none/opacity:0/
-    // transition:none, выставленные при закрытии (см. closeAbout2Expand).
+
+
+
+
     if (hobbiesSideDecor) { hobbiesSideDecor.style.display = ''; hobbiesSideDecor.style.opacity = ''; hobbiesSideDecor.style.transition = ''; }
-    // Картинка picture_2.png (боковая декорация "Моё хобби") — та же
-    // логика сброса, что и у picture_3.png/picture_4.png выше: display
-    // решает CSS-класс .has-skins, тут только снимаем инлайн стили,
-    // выставленные при закрытии (см. closeAbout2Expand).
+
+
+
+
     if (hobbySideDecor) { hobbySideDecor.style.display = ''; hobbySideDecor.style.opacity = ''; hobbySideDecor.style.transition = ''; }
-    // Картинка picture_1.png (боковая декорация "Любимый исполнитель") —
-    // та же логика сброса, что и у остальных трёх выше: display решает
-    // CSS-класс .has-artist, тут только снимаем инлайн стили,
-    // выставленные при закрытии (см. closeAbout2Expand).
+
+
+
+
     if (artistSideDecor) { artistSideDecor.style.display = ''; artistSideDecor.style.opacity = ''; artistSideDecor.style.transition = ''; }
-    // Карточки фактов, "перевёрнутые" на комментарий (см.
-    // toggleAbout2FactComment) — сбрасываем на каждое открытие разворота,
-    // чтобы всегда показывался исходный факт, а не оставшийся комментарий
-    // с прошлого визита.
+
+
+
+
     document.querySelectorAll('.about2-facts-card.showing-comment').forEach(card => {
         card.classList.remove('showing-comment');
     });
 
     photo.style.display = '';
 
-    // Сброс на КАЖДОЕ открытие — иначе, если предыдущее закрытие было от
-    // мини-плеера (см. about2ExpandFromMiniPlayer в closeAbout2Expand),
-    // opacity/transition остались бы висеть инлайн и следующий обычный
-    // разворот открылся бы уже с невидимой frameImg.
+
+
+
+
     frameImg.style.transition = '';
     frameImg.style.opacity = '';
     frameImg.src = img.src;
     titleTarget.textContent = titleEl ? titleEl.textContent : '';
-    // innerHTML (не textContent) — чтобы <br> в .a2-expand-text-src (например,
-    // у "Любимый исполнитель") рендерился как перенос строки, а не как текст.
+
+
     subtitleTarget.innerHTML = textEl ? textEl.innerHTML : '';
 
-    // Индивидуальная позиция заголовка/подзаголовка для каждого блока:
-    // номер берём из id вида "a2-item1" → "1" → класс "pos-1" (координаты
-    // pos-1..pos-4 заданы в CSS выше, у каждого блока свои, независимые).
+
+
+
     const blockNum = (item.id.match(/\d+$/) || ['1'])[0];
     titleTarget.className = 'about2-expand-title pos-' + blockNum;
     subtitleTarget.className = 'about2-expand-subtitle pos-' + blockNum;
@@ -5898,12 +5955,12 @@ function closeAbout2Expand() {
         player.style.display = '';
         player2.style.display = '';
         player3.style.display = '';
-        // Полностью прячем окно "Открыть галерею"+статистика и панель с
-        // фото — display остаётся на них до этого момента (0.2s fade выше
-        // только опускал opacity, но не убирал сам блок из потока/с экрана).
-        // Без этого сброса они висели поверх страницы "Обо мне" сразу после
-        // закрытия разворота, пока про них "не вспомнят" при следующем
-        // входе на "Увлечения слой 2".
+
+
+
+
+
+
         if (gallerySection) gallerySection.style.display = 'none';
         if (photoPanel) photoPanel.style.display = 'none';
         if (metroSection) metroSection.style.display = 'none';
@@ -6076,9 +6133,9 @@ function setAboutHobbiesLayer(layer, animate) {
     function applyState() {
         titleTarget.textContent = titleSrc[layer] ? titleSrc[layer].textContent : '';
         subtitleTarget.innerHTML = textSrc[layer] ? textSrc[layer].innerHTML : '';
-        // Позиция заголовка/подзаголовка "Увлечения слой 2" сдвинута ниже и
-        // правее относительно слоя 1 (см. .pos-3-l2 в CSS) — освобождает
-        // место под окно с фотографиями. Слоя 1 это не касается.
+
+
+
         titleTarget.classList.toggle('pos-3-l2', layer === 2);
         subtitleTarget.classList.toggle('pos-3-l2', layer === 2);
 
@@ -6364,42 +6421,18 @@ function openSatranaFromHobbies() {
     }, 520);
 }
 
-// ===== Фотографии для блока "Увлечения слой 2" ("Фотографии", a2-item3).
-// Файлы лежат в папке Moscow/ рядом с сайтом: 1.jpg, 2.jpg, ..., 41.jpg.
-// Чтобы добавить новые фото, просто добавьте пути в этот массив — счётчик
-// "Фотографии" в интерфейсе берётся из его длины и обновится сам собой
-// (см. applyState в setAboutHobbiesLayer выше). Кнопка "Открыть галерею"
-// открывает тот же полноэкранный просмотрщик, что и скины CS2 в блоке
-// "Моё хобби" (openAbout2SkinViewer) — то же переключение фото круглой
-// кнопкой-стрелкой, тот же выход по ЛКМ в любом месте.
 const about2PhotoGalleryImgs = Array.from({ length: 41 }, (_, i) => `assets/Moscow/${i + 1}.jpg`);
 
-// Количество локаций — не привязано к массиву фото, меняется вручную
-// прямо здесь при необходимости.
 let about2PhotoLocationsCount = 12;
 
 function openAbout2PhotoGallery() {
     openAbout2SkinViewer({ name: 'Фотографии', imgs: about2PhotoGalleryImgs, link: null });
 }
 
-// ===== Встроенное окно с фотографиями (не всплывающее, справа от "2024+") —
-// "Увлечения слой 2" ("Фотографии", a2-item3). Большое фото + стрелочки
-// влево/вправо + ровно 7 миниатюр (скользящее окно вокруг текущего фото из
-// about2PhotoGalleryImgs) + 7 "таблеток"-индикаторов под миниатюрами +
-// кнопка "Смотреть все (N)", переключающая панель в режим сетки со всеми
-// фото сразу (кол-во N берётся из длины about2PhotoGalleryImgs, т.е. из
-// кол-ва файлов в папке Moscow/, и обновляется само собой). =====
-
-// Индекс текущего большого фото в about2PhotoGalleryImgs.
 let about2PhotoIndex = 0;
-// Построена ли уже сетка "Смотреть все" (строится один раз за открытие
-// разворота, лениво — только когда пользователь впервые нажмёт кнопку).
+
 let about2PhotoGridBuilt = false;
 
-// Вызывается каждый раз при входе на "Увлечения слой 2" (см. applyState в
-// setAboutHobbiesLayer) — выбирает случайное стартовое фото (каждый раз
-// разное, как и просили), сбрасывает панель в обычный (не сеточный) режим
-// и обновляет подписи "Смотреть все (N)"/"Все фото (N)".
 function initAbout2PhotoPanel() {
     const total = about2PhotoGalleryImgs.length;
     if (!total) return;
@@ -7917,7 +7950,7 @@ document.addEventListener('dragstart', function(e) {
             { t: 57,   text: 'Но если встретимся — не кокетничай' },
             { t: 60,   text: 'Эти песни не про тебя' },
             { t: 63,   text: 'Это моя АВТОБИОГРАФИЯ' },
-            { t: 65,   text: '' } // на 65-й секунде текст плавно гаснет и больше не появляется
+            { t: 65,   text: '' }
         ];
 
         var currentLyricIndex = -1;
@@ -8266,6 +8299,7 @@ document.addEventListener('dragstart', function(e) {
                     setLoading(false);
                     if (data && data.ok) {
                         rememberUnlocked();
+                        if (window.updateAboutLockUI) window.updateAboutLockUI(true);
                         var cb = pendingOnSuccess;
                         closeOverlay();
                         if (cb) cb();
@@ -8302,6 +8336,9 @@ document.addEventListener('dragstart', function(e) {
             pendingOnSuccess = onSuccess;
             openOverlay();
         };
+
+        window.isAboutLayer2Unlocked = isUnlocked;
+        if (window.updateAboutLockUI) window.updateAboutLockUI(false);
     })();
     </script>
 </body>
