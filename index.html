@@ -1062,12 +1062,19 @@ body.light-theme #my-photo-light {
             overflow: visible;
         }
 
+        .about-layer-toggle.locked {
+            border-color: transparent;
+            background-color: transparent;
+        }
+
         .about-layer-toggle.locked .layer-arrow {
             display: none;
         }
 
         .about-layer-toggle.locked .about-layer-lock-icon {
             display: block;
+            width: 22px;
+            height: 22px;
         }
 
         .about-layer-lock-shackle {
@@ -7717,10 +7724,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('copy', function(e) {
+    var tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
     e.preventDefault();
 });
 
 document.addEventListener('dragstart', function(e) {
+    var tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
     e.preventDefault();
 });
 
@@ -8139,6 +8150,10 @@ document.addEventListener('dragstart', function(e) {
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s ease;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
         }
 
         body.light-theme .about-pw-field input {
