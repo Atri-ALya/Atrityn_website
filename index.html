@@ -1969,18 +1969,12 @@ opacity: 1;
         .about2-item.a2-locked {
             cursor: not-allowed;
             position: relative;
+            background: #000000;
         }
 
         .about2-item.a2-locked img {
-            filter: blur(11px) brightness(0.32) !important;
-        }
-
-        .about2-item.a2-locked.active img {
             opacity: 0 !important;
-        }
-
-        .about2-item.a2-locked.active {
-            background: #000000;
+            will-change: opacity;
         }
 
         .about2-item.a2-locked .a2-cap-title,
@@ -2032,7 +2026,7 @@ opacity: 1;
             letter-spacing: 0.08em;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            opacity: 1;
+            opacity: 0;
         }
 
         .a2-lock-label-horizontal {
@@ -2047,8 +2041,8 @@ opacity: 1;
         }
 
         .about2-item.a2-locked.active .a2-lock-badge svg {
-            width: 52px;
-            height: 52px;
+            width: 70px;
+            height: 70px;
         }
 
         .about2-item.a2-locked.active .a2-lock-label-vertical {
@@ -2056,6 +2050,7 @@ opacity: 1;
         }
 
         .about2-item.a2-locked.active .a2-lock-label-horizontal {
+            font-size: 1.76em;
             opacity: 1;
         }
 
