@@ -5511,7 +5511,7 @@ html.has-touch-sensor #mobile-block-screen {
         <div id="about2PhotoPanel" class="about2-photo-panel">
             <div id="about2PhotoPanelSingle" class="about2-photo-panel-single">
                 <div class="about2-photo-big-wrap" onclick="event.stopPropagation(); openAbout2PhotoFullscreen();">
-                    <span id="about2PhotoCounter" class="about2-photo-counter">1 / 41</span>
+                    <span id="about2PhotoCounter" class="about2-photo-counter">1 / 74</span>
                     <button type="button" class="about2-photo-arrow prev" onclick="event.stopPropagation(); stepAbout2Photo(-1);" aria-label="Предыдущее фото">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                     </button>
@@ -5526,13 +5526,13 @@ html.has-touch-sensor #mobile-block-screen {
                 <div id="about2PhotoDots" class="about2-photo-dots"></div>
                 <button type="button" id="about2PhotoViewAllBtn" class="about2-gallery-btn about2-photo-viewall-btn" onclick="event.stopPropagation(); openAbout2PhotoGrid();">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                    <span id="about2PhotoViewAllLabel">Смотреть все (41)</span>
+                    <span id="about2PhotoViewAllLabel">Смотреть все (74)</span>
                 </button>
             </div>
 
             <div id="about2PhotoPanelGrid" class="about2-photo-panel-grid">
                 <div class="about2-photo-grid-header">
-                    <span id="about2PhotoGridTitle" class="about2-photo-grid-title">Все фото (41)</span>
+                    <span id="about2PhotoGridTitle" class="about2-photo-grid-title">Все фото (74)</span>
                     <button type="button" class="about2-photo-grid-close" onclick="event.stopPropagation(); closeAbout2PhotoGrid();" aria-label="Закрыть">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"></line><line x1="20" y1="4" x2="4" y2="20"></line></svg>
                     </button>
@@ -6961,9 +6961,9 @@ function openSatranaFromHobbies() {
     }, 520);
 }
 
-const about2PhotoGalleryImgs = Array.from({ length: 41 }, (_, i) => `assets/Moscow/${i + 1}.jpg`);
+const about2PhotoGalleryImgs = Array.from({ length: 74 }, (_, i) => `assets/Moscow/${i + 1}.jpg`);
 
-let about2PhotoLocationsCount = 12;
+let about2PhotoLocationsCount = '15+';
 
 function openAbout2PhotoGallery() {
     openAbout2SkinViewer({ name: 'Фотографии', imgs: about2PhotoGalleryImgs, link: null });
