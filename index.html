@@ -9043,6 +9043,8 @@ document.addEventListener('dragstart', function(e) {
         // Число после дефиса в конце логина/пароля определяет, сколько первых
         // плиток (Любимый исполнитель → Моё хобби → Мои увлечения) остаются
         // заблокированными. Без суффикса — доступны все 4 плитки.
+        // Суффикс -5 — особый уровень: блокирует абсолютно все 4 плитки
+        // (полный запрет доступа к "Обо мне слой 2").
         var LEVEL_STORAGE_KEY = 'about2_level';
         var A2_ITEM_IDS = ['a2-item1', 'a2-item2', 'a2-item3', 'a2-item4'];
 
@@ -9052,7 +9054,8 @@ document.addEventListener('dragstart', function(e) {
             if (!m) return 1;
             var n = parseInt(m[1], 10);
             if (!n || n < 1) return 1;
-            if (n > 4) n = 4;
+            // Уровень 5 — особый: блокирует вообще все плитки (полный запрет).
+            if (n > 5) n = 5;
             return n;
         }
 
@@ -9075,7 +9078,7 @@ document.addEventListener('dragstart', function(e) {
         function getStoredLevel() {
             try {
                 var v = parseInt(localStorage.getItem(LEVEL_STORAGE_KEY), 10);
-                return (v >= 1 && v <= 4) ? v : 1;
+                return (v >= 1 && v <= 5) ? v : 1;
             } catch (e) {
                 return 1;
             }
@@ -9083,7 +9086,8 @@ document.addEventListener('dragstart', function(e) {
 
         function applyAboutLayer2AccessLevel() {
             var level = getStoredLevel();
-            var hiddenCount = level - 1;
+            // Уровень 5 = полная блокировка: все плитки недоступны.
+            var hiddenCount = (level >= 5) ? A2_ITEM_IDS.length : (level - 1);
             A2_ITEM_IDS.forEach(function (id, idx) {
                 var el = document.getElementById(id);
                 if (!el) return;
