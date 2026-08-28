@@ -1968,15 +1968,19 @@ opacity: 1;
         /* --- Заблокированные плитки (уровень доступа по логину/паролю) --- */
         .about2-item.a2-locked {
             cursor: not-allowed;
+            position: relative;
         }
 
         .about2-item.a2-locked img {
             filter: blur(11px) brightness(0.32) !important;
         }
 
-        .about2-item.a2-locked:hover img,
         .about2-item.a2-locked.active img {
-            filter: blur(11px) brightness(0.32) !important;
+            opacity: 0 !important;
+        }
+
+        .about2-item.a2-locked.active {
+            background: #000000;
         }
 
         .about2-item.a2-locked .a2-cap-title,
@@ -1986,12 +1990,12 @@ opacity: 1;
 
         .a2-lock-badge {
             position: absolute;
-            top: 318px;
-            width: 110px;
+            inset: 0;
             display: none;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 16px;
             color: #FFFFFF;
             text-align: center;
             pointer-events: none;
@@ -2003,16 +2007,36 @@ opacity: 1;
         }
 
         .a2-lock-badge svg {
-            width: 30px;
-            height: 30px;
-            opacity: 0.9;
+            width: 44px;
+            height: 44px;
+            opacity: 0.95;
+            flex-shrink: 0;
         }
 
         .a2-lock-badge span {
             font-size: 0.85em;
             font-weight: 600;
-            letter-spacing: 0.01em;
-            opacity: 0.85;
+            letter-spacing: 0.08em;
+            opacity: 0.9;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+
+        .about2-item.a2-locked.active .a2-lock-badge {
+            flex-direction: row;
+            gap: 14px;
+        }
+
+        .about2-item.a2-locked.active .a2-lock-badge svg {
+            width: 52px;
+            height: 52px;
+        }
+
+        .about2-item.a2-locked.active .a2-lock-badge span {
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+            letter-spacing: 0.02em;
+            font-size: 1em;
         }
 
         @keyframes a2LockShake {
@@ -5249,7 +5273,7 @@ html.has-touch-sensor #mobile-block-screen {
 
                     <div class="a2-expand-title-src" data-en="Title (edit me)" data-ru="Егор Натс" hidden>Егор Натс</div>
                     <div class="a2-expand-text-src" data-en="Subtitle (edit me)" data-ru="Егор Натс (настоящее имя — Егор Барханов) — российский рэп-исполнитель, певец и автор песен. Работает в жанрах эмо-рэпа, хип-хопа, поп-рэпа, романтического урбан-попа и гиперпопа.<br>Список моих любимых треков" hidden>Егор Натс (настоящее имя — Егор Барханов) — российский рэп-исполнитель, певец и автор песен. Работает в жанрах эмо-рэпа, хип-хопа, поп-рэпа, романтического урбан-попа и гиперпопа.<br>Список моих любимых треков</div>
-                    <div class="a2-lock-badge a2-col-1">
+                    <div class="a2-lock-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
                         <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
                     </div>
@@ -5260,7 +5284,7 @@ html.has-touch-sensor #mobile-block-screen {
                     <div class="a2-cap-text a2-col-2" data-en="Subtitle (edit me)" data-ru="CS2">CS2</div>
                     <div class="a2-expand-title-src" data-en="Title (edit me)" data-ru="Моя утраченная еженедельная рутина..." hidden>Моя утраченная еженедельная рутина...</div>
                     <div class="a2-expand-text-src" data-en="Subtitle (edit me)" data-ru="Начал играть летом 2020 года, на данный момент утратил любовь к этой игре. В ней я добился всё, что хотел и рад каждому часу, который я потратил, играя в неё. Единственное, что меня держит эта игра – её прекрасные скины.<br>Мои любимые скины, которые я имею в своем инвентаре:" hidden>Начал играть летом 2020 года, на данный момент утратил любовь к этой игре. В ней я добился всё, что хотел и рад каждому часу, который я потратил, играя в неё. Единственное, что меня держит эта игра – её прекрасные скины.<br>Мои любимые скины, которые я имею в своем инвентаре:</div>
-                    <div class="a2-lock-badge a2-col-2">
+                    <div class="a2-lock-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
                         <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
                     </div>
@@ -5280,7 +5304,7 @@ html.has-touch-sensor #mobile-block-screen {
 
                     <div class="a2-expand-title-src-3" data-en="Moscow metro" data-ru="Московское метро" hidden>Московское метро</div>
                     <div class="a2-expand-text-src-3" data-en="I know the layout of all stations, MCC and MCD.<br>Into the Moscow metro since 2025" data-ru="Знаю расположение всех станций, МЦК и МЦД.<br>Увлекаюсь московским метро с 2025 года" hidden>Знаю расположение всех станций, МЦК и МЦД.<br>Увлекаюсь московским метро с 2025 года</div>
-                    <div class="a2-lock-badge a2-col-3">
+                    <div class="a2-lock-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
                         <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
                     </div>
