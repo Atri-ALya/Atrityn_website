@@ -31,7 +31,7 @@
         }
     })();
     </script>
-    <title>My Portfolio</title>
+    <title>AVTOBIOGRAFIA</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -5785,7 +5785,7 @@ function navigateToSection(index) {
         titles.forEach(title => title.classList.add('visible'));
 
         const sectionTitles = ['Home', 'About me', 'Portfolio', 'Contact'];
-        document.title = sectionTitles[index];
+        document.title = (index === 1 && isAboutLayer2) ? 'About me 2' : sectionTitles[index];
     }
 
     if (goingHome) {
@@ -5881,6 +5881,7 @@ function _performGoToAboutLayer2() {
 
     isAboutLayer2 = true;
     updateAboutToggleButton();
+    document.title = 'About me 2';
 }
 
 function goToAboutLayer2() {
@@ -5906,6 +5907,7 @@ function goToAboutLayer1() {
 
     isAboutLayer2 = false;
     updateAboutToggleButton();
+    document.title = 'About me';
 }
 
 function toggleAboutLayer() {
