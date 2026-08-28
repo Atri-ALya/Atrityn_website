@@ -2000,6 +2000,7 @@ opacity: 1;
             text-align: center;
             pointer-events: none;
             z-index: 3;
+            transition: gap 0.4s ease;
         }
 
         .about2-item.a2-locked .a2-lock-badge {
@@ -2011,19 +2012,37 @@ opacity: 1;
             height: 44px;
             opacity: 0.95;
             flex-shrink: 0;
+            transition: width 0.4s ease, height 0.4s ease;
         }
 
-        .a2-lock-badge span {
-            font-size: 0.85em;
+        .a2-lock-label-wrap {
+            display: grid;
             font-weight: 600;
-            letter-spacing: 0.08em;
             opacity: 0.9;
+        }
+
+        .a2-lock-label-vertical,
+        .a2-lock-label-horizontal {
+            grid-area: 1 / 1;
+            transition: opacity 0.35s ease;
+        }
+
+        .a2-lock-label-vertical {
+            font-size: 1.1em;
+            letter-spacing: 0.08em;
             writing-mode: vertical-rl;
             text-orientation: upright;
+            opacity: 1;
+        }
+
+        .a2-lock-label-horizontal {
+            font-size: 1.3em;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            opacity: 0;
         }
 
         .about2-item.a2-locked.active .a2-lock-badge {
-            flex-direction: row;
             gap: 14px;
         }
 
@@ -2032,11 +2051,12 @@ opacity: 1;
             height: 52px;
         }
 
-        .about2-item.a2-locked.active .a2-lock-badge span {
-            writing-mode: horizontal-tb;
-            text-orientation: mixed;
-            letter-spacing: 0.02em;
-            font-size: 1em;
+        .about2-item.a2-locked.active .a2-lock-label-vertical {
+            opacity: 0;
+        }
+
+        .about2-item.a2-locked.active .a2-lock-label-horizontal {
+            opacity: 1;
         }
 
         @keyframes a2LockShake {
@@ -5275,7 +5295,10 @@ html.has-touch-sensor #mobile-block-screen {
                     <div class="a2-expand-text-src" data-en="Subtitle (edit me)" data-ru="Егор Натс (настоящее имя — Егор Барханов) — российский рэп-исполнитель, певец и автор песен. Работает в жанрах эмо-рэпа, хип-хопа, поп-рэпа, романтического урбан-попа и гиперпопа.<br>Список моих любимых треков" hidden>Егор Натс (настоящее имя — Егор Барханов) — российский рэп-исполнитель, певец и автор песен. Работает в жанрах эмо-рэпа, хип-хопа, поп-рэпа, романтического урбан-попа и гиперпопа.<br>Список моих любимых треков</div>
                     <div class="a2-lock-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
-                        <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                        <span class="a2-lock-label-wrap">
+                            <span class="a2-lock-label-vertical" data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                            <span class="a2-lock-label-horizontal" data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                        </span>
                     </div>
                 </div>
                 <div class="about2-item" id="a2-item2">
@@ -5286,7 +5309,10 @@ html.has-touch-sensor #mobile-block-screen {
                     <div class="a2-expand-text-src" data-en="Subtitle (edit me)" data-ru="Начал играть летом 2020 года, на данный момент утратил любовь к этой игре. В ней я добился всё, что хотел и рад каждому часу, который я потратил, играя в неё. Единственное, что меня держит эта игра – её прекрасные скины.<br>Мои любимые скины, которые я имею в своем инвентаре:" hidden>Начал играть летом 2020 года, на данный момент утратил любовь к этой игре. В ней я добился всё, что хотел и рад каждому часу, который я потратил, играя в неё. Единственное, что меня держит эта игра – её прекрасные скины.<br>Мои любимые скины, которые я имею в своем инвентаре:</div>
                     <div class="a2-lock-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
-                        <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                        <span class="a2-lock-label-wrap">
+                            <span class="a2-lock-label-vertical" data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                            <span class="a2-lock-label-horizontal" data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                        </span>
                     </div>
                 </div>
                 <div class="about2-item" id="a2-item3">
@@ -5306,7 +5332,10 @@ html.has-touch-sensor #mobile-block-screen {
                     <div class="a2-expand-text-src-3" data-en="I know the layout of all stations, MCC and MCD.<br>Into the Moscow metro since 2025" data-ru="Знаю расположение всех станций, МЦК и МЦД.<br>Увлекаюсь московским метро с 2025 года" hidden>Знаю расположение всех станций, МЦК и МЦД.<br>Увлекаюсь московским метро с 2025 года</div>
                     <div class="a2-lock-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
-                        <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                        <span class="a2-lock-label-wrap">
+                            <span class="a2-lock-label-vertical" data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                            <span class="a2-lock-label-horizontal" data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                        </span>
                     </div>
                 </div>
                 <div class="about2-item" id="a2-item4">
