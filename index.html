@@ -1965,6 +1965,89 @@ opacity: 1;
             filter: brightness(0.75);
         }
 
+        /* --- Заблокированные плитки (уровень доступа по логину/паролю) --- */
+        .about2-item.a2-locked {
+            cursor: not-allowed;
+        }
+
+        .about2-item.a2-locked img {
+            filter: blur(11px) brightness(0.32) !important;
+        }
+
+        .about2-item.a2-locked:hover img,
+        .about2-item.a2-locked.active img {
+            filter: blur(11px) brightness(0.32) !important;
+        }
+
+        .about2-item.a2-locked .a2-cap-title,
+        .about2-item.a2-locked .a2-cap-text {
+            opacity: 0 !important;
+        }
+
+        .a2-lock-badge {
+            position: absolute;
+            top: 318px;
+            width: 110px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #FFFFFF;
+            text-align: center;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .about2-item.a2-locked .a2-lock-badge {
+            display: flex;
+        }
+
+        .a2-lock-badge svg {
+            width: 30px;
+            height: 30px;
+            opacity: 0.9;
+        }
+
+        .a2-lock-badge span {
+            font-size: 0.85em;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            opacity: 0.85;
+        }
+
+        @keyframes a2LockShake {
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-5px); }
+            40%, 60% { transform: translateX(5px); }
+        }
+
+        .about2-item.a2-locked.a2-shake {
+            animation: a2LockShake 0.45s ease;
+        }
+
+        .a2-lock-tooltip {
+            position: fixed;
+            transform: translate(-50%, -100%);
+            background: rgba(20, 24, 32, 0.95);
+            color: #fff;
+            font-size: 0.85em;
+            font-weight: 500;
+            padding: 8px 14px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+        }
+
+        .a2-lock-tooltip.visible {
+            opacity: 1;
+            transform: translate(-50%, -110%);
+        }
+
         .about2-expand-overlay {
             position: fixed;
             top: 0;
@@ -5166,6 +5249,10 @@ html.has-touch-sensor #mobile-block-screen {
 
                     <div class="a2-expand-title-src" data-en="Title (edit me)" data-ru="Егор Натс" hidden>Егор Натс</div>
                     <div class="a2-expand-text-src" data-en="Subtitle (edit me)" data-ru="Егор Натс (настоящее имя — Егор Барханов) — российский рэп-исполнитель, певец и автор песен. Работает в жанрах эмо-рэпа, хип-хопа, поп-рэпа, романтического урбан-попа и гиперпопа.<br>Список моих любимых треков" hidden>Егор Натс (настоящее имя — Егор Барханов) — российский рэп-исполнитель, певец и автор песен. Работает в жанрах эмо-рэпа, хип-хопа, поп-рэпа, романтического урбан-попа и гиперпопа.<br>Список моих любимых треков</div>
+                    <div class="a2-lock-badge a2-col-1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                        <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                    </div>
                 </div>
                 <div class="about2-item" id="a2-item2">
                     <img src="assets/AllScreenshorts/screenshot 5.png" alt="Screenshot 5" loading="lazy" decoding="async">
@@ -5173,6 +5260,10 @@ html.has-touch-sensor #mobile-block-screen {
                     <div class="a2-cap-text a2-col-2" data-en="Subtitle (edit me)" data-ru="CS2">CS2</div>
                     <div class="a2-expand-title-src" data-en="Title (edit me)" data-ru="Моя утраченная еженедельная рутина..." hidden>Моя утраченная еженедельная рутина...</div>
                     <div class="a2-expand-text-src" data-en="Subtitle (edit me)" data-ru="Начал играть летом 2020 года, на данный момент утратил любовь к этой игре. В ней я добился всё, что хотел и рад каждому часу, который я потратил, играя в неё. Единственное, что меня держит эта игра – её прекрасные скины.<br>Мои любимые скины, которые я имею в своем инвентаре:" hidden>Начал играть летом 2020 года, на данный момент утратил любовь к этой игре. В ней я добился всё, что хотел и рад каждому часу, который я потратил, играя в неё. Единственное, что меня держит эта игра – её прекрасные скины.<br>Мои любимые скины, которые я имею в своем инвентаре:</div>
+                    <div class="a2-lock-badge a2-col-2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                        <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                    </div>
                 </div>
                 <div class="about2-item" id="a2-item3">
                     <img src="assets/AllScreenshorts/screenshot 6.png" alt="Screenshot 6" loading="lazy" decoding="async">
@@ -5189,6 +5280,10 @@ html.has-touch-sensor #mobile-block-screen {
 
                     <div class="a2-expand-title-src-3" data-en="Moscow metro" data-ru="Московское метро" hidden>Московское метро</div>
                     <div class="a2-expand-text-src-3" data-en="I know the layout of all stations, MCC and MCD.<br>Into the Moscow metro since 2025" data-ru="Знаю расположение всех станций, МЦК и МЦД.<br>Увлекаюсь московским метро с 2025 года" hidden>Знаю расположение всех станций, МЦК и МЦД.<br>Увлекаюсь московским метро с 2025 года</div>
+                    <div class="a2-lock-badge a2-col-3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                        <span data-en="Locked" data-ru="Заблокировано">Заблокировано</span>
+                    </div>
                 </div>
                 <div class="about2-item" id="a2-item4">
                     <img src="assets/AllScreenshorts/screenshot 7.png" alt="Screenshot 7" loading="lazy" decoding="async">
@@ -5811,6 +5906,10 @@ document.querySelectorAll('.about2-item').forEach(item => {
     });
 
     item.addEventListener('click', () => {
+        if (item.classList.contains('a2-locked')) {
+            if (window.showA2LockFeedback) window.showA2LockFeedback(item);
+            return;
+        }
         openAbout2Expand(item);
     });
 });
@@ -8892,6 +8991,93 @@ document.addEventListener('dragstart', function(e) {
             }
         }
 
+        // --- Уровни доступа к плиткам "Обо мне слой 2" ---
+        // Число после дефиса в конце логина/пароля определяет, сколько первых
+        // плиток (Любимый исполнитель → Моё хобби → Мои увлечения) остаются
+        // заблокированными. Без суффикса — доступны все 4 плитки.
+        var LEVEL_STORAGE_KEY = 'about2_level';
+        var A2_ITEM_IDS = ['a2-item1', 'a2-item2', 'a2-item3', 'a2-item4'];
+
+        function extractLevel(str) {
+            if (!str) return 1;
+            var m = /-(\d+)\s*$/.exec(String(str).trim());
+            if (!m) return 1;
+            var n = parseInt(m[1], 10);
+            if (!n || n < 1) return 1;
+            if (n > 4) n = 4;
+            return n;
+        }
+
+        function computeAccessLevel(login, password) {
+            var lvlLogin = extractLevel(login);
+            var lvlPassword = extractLevel(password);
+            // Если суффиксы логина и пароля не совпадают (опечатка при выдаче
+            // доступа) — подстраховываемся и берём более строгий (больший) уровень.
+            return Math.max(lvlLogin, lvlPassword);
+        }
+
+        function storeLevel(level) {
+            try {
+                localStorage.setItem(LEVEL_STORAGE_KEY, String(level));
+            } catch (e) {
+
+            }
+        }
+
+        function getStoredLevel() {
+            try {
+                var v = parseInt(localStorage.getItem(LEVEL_STORAGE_KEY), 10);
+                return (v >= 1 && v <= 4) ? v : 1;
+            } catch (e) {
+                return 1;
+            }
+        }
+
+        function applyAboutLayer2AccessLevel() {
+            var level = getStoredLevel();
+            var hiddenCount = level - 1;
+            A2_ITEM_IDS.forEach(function (id, idx) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.classList.toggle('a2-locked', idx < hiddenCount);
+            });
+        }
+
+        var a2LockTooltipTimer = null;
+        function showA2LockFeedback(item) {
+            item.classList.remove('a2-shake');
+            void item.offsetWidth;
+            item.classList.add('a2-shake');
+
+            if (a2LockTooltipTimer) {
+                clearTimeout(a2LockTooltipTimer);
+                a2LockTooltipTimer = null;
+            }
+            var existing = document.querySelector('.a2-lock-tooltip');
+            if (existing) existing.remove();
+
+            var tip = document.createElement('div');
+            tip.className = 'a2-lock-tooltip';
+            tip.textContent = isPageEnglish() ? 'Not available at your access level' : 'Недоступно на вашем уровне доступа';
+            document.body.appendChild(tip);
+
+            var rect = item.getBoundingClientRect();
+            tip.style.left = Math.round(rect.left + rect.width / 2) + 'px';
+            tip.style.top = Math.round(rect.top) + 'px';
+
+            requestAnimationFrame(function () {
+                tip.classList.add('visible');
+            });
+
+            a2LockTooltipTimer = setTimeout(function () {
+                tip.classList.remove('visible');
+                setTimeout(function () { tip.remove(); }, 250);
+            }, 1600);
+        }
+
+        window.applyAboutLayer2AccessLevel = applyAboutLayer2AccessLevel;
+        window.showA2LockFeedback = showA2LockFeedback;
+
         function isPageEnglish() {
             return typeof isEnglish !== 'undefined' && !!isEnglish;
         }
@@ -8950,6 +9136,8 @@ document.addEventListener('dragstart', function(e) {
                     reveal(function () {
                         if (data && data.ok) {
                             rememberUnlocked();
+                            storeLevel(computeAccessLevel(login, password));
+                            applyAboutLayer2AccessLevel();
                             if (window.updateAboutLockUI) window.updateAboutLockUI(true);
                             showResult(true, isPageEnglish() ? 'Success' : 'Успешно');
                             var cb = pendingOnSuccess;
@@ -9039,6 +9227,7 @@ document.addEventListener('dragstart', function(e) {
 
         window.isAboutLayer2Unlocked = isUnlocked;
         if (window.updateAboutLockUI) window.updateAboutLockUI(false);
+        applyAboutLayer2AccessLevel();
     })();
     </script>
 
