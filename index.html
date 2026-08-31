@@ -731,7 +731,6 @@ body.light-theme #my-photo-light {
             color: var(--subtitle-gray-light);
         }
 
-        /* ===== Виджет часов и погоды на главном экране ===== */
         .home-clock-widget {
             position: relative;
             display: inline-block;
@@ -1437,7 +1436,6 @@ body.light-theme #my-photo-light {
             opacity: 0;
         }
 
-
         .language-toggle-button:hover {
             color: var(--primary-color);
         }
@@ -1965,7 +1963,6 @@ opacity: 1;
             filter: brightness(0.75);
         }
 
-        /* --- Заблокированные плитки (уровень доступа по логину/паролю) --- */
         .about2-item.a2-locked {
             cursor: not-allowed;
             position: relative;
@@ -4896,11 +4893,6 @@ html.has-touch-sensor #mobile-block-screen {
             color: #ffffff;
         }
 
-        /* Ховер кнопки "Слушать" на секретном интро — сначала мгновенно
-           проступает тёплый оранжевый, а затем (с небольшой задержкой)
-           поверх плавно проявляется градиент из цветов неоновой вывески
-           Shinjuku: тёмно-красный -> красный -> оранжевое свечение ->
-           холодный синий неон. */
         #introPlayBtn2 {
             position: relative;
             z-index: 0;
@@ -5017,14 +5009,17 @@ html.has-touch-sensor #mobile-block-screen {
             opacity: 1;
         }
 
-        /* На секретном интро подпись/автограф центрируем по всему экрану,
-           как на интро Егора Натса — а не рядом с текстом/прогрессом внизу. */
         #introAuthorSignature2 {
             position: absolute;
             inset: 0;
             justify-content: center;
             z-index: 3;
         }
+
+        #introAuthorSignature3 { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; z-index:3; opacity:0; pointer-events:none; transition:opacity 0.9s cubic-bezier(0.4,0,0.2,1); }
+        #introAuthorSignature3.intro-signature-visible { opacity:1; }
+        #introAuthorText3 { font-size:0.95em; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; opacity:0.75; }
+        #introAuthorAutograph3 { display:block; width:min(300px,70vw); height:auto; filter:none; box-shadow:none; }
 
         #introAuthorText,
         #introAuthorText2 {
@@ -5060,7 +5055,6 @@ html.has-touch-sensor #mobile-block-screen {
             opacity: 0.6;
         }
 
-        /* ===== Секретное видео-интро (пасхалка) ===== */
         #introOverlay2 {
             position: fixed;
             inset: 0;
@@ -5250,7 +5244,6 @@ html.has-touch-sensor #mobile-block-screen {
             opacity: 0.7;
         }
 
-        /* ===== Регулятор громкости секретного видео-интро (под кнопкой "Пропустить") ===== */
         #introVolumeControl2 {
             position: absolute;
             top: 82px;
@@ -5338,6 +5331,312 @@ html.has-touch-sensor #mobile-block-screen {
         }
 
         #introVolumeSlider2::-moz-range-progress {
+            background: rgba(255, 255, 255, 0.75);
+            height: 3px;
+            border-radius: 3px;
+        }
+        
+        #introOverlay3 {
+            position: fixed;
+            inset: 0;
+            z-index: 800000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            font-family: 'Inter', 'Inter Fallback', sans-serif;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('assets/AvtoBiographia/Secrets2/Nats.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        #introOverlay3.intro3-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #introOverlay3.intro-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #introStartScreen3 {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 26px;
+            transition: opacity 0.4s ease;
+        }
+
+        #introStartScreen3.intro-fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #introTitle3 {
+            font-size: 1.3em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+
+        #introPlayBtn3 {
+            padding: 15px 28px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            font-weight: 600;
+            color: #ffffff;
+            background: transparent;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        #introPlayBtn3:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+        }
+
+        #introTopControls3 {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #introSkipBtn3,
+        #introBackBtn3 {
+            padding: 10px 24px;
+            font-size: 0.85em;
+            opacity: 0.65;
+            border-color: transparent;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        #introSkipBtn3:hover,
+        #introBackBtn3:hover {
+            background: transparent;
+            color: #ffffff;
+            border-color: transparent;
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        #introBackBtn3 svg {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        #introBackBtn3:hover svg {
+            transform: translateX(-3px);
+        }
+
+        #introBackBtn3 {
+            transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #introBackBtn3.intro3-btn-hidden {
+            opacity: 0;
+            transform: translateX(10px);
+            pointer-events: none;
+        }
+
+        #introPlayerScreen3 {
+            display: none;
+            position: absolute;
+            inset: 0;
+        }
+
+        #introPlayerScreen3.intro-active {
+            display: block;
+        }
+
+        #introVideo3 {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.45) saturate(0.9);
+            background: #000;
+        }
+
+        #introVideoDarkOverlay3 {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+        }
+
+        #introContent3 {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 70px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #introLyricSlot3 {
+            position: relative;
+            width: min(78vw, 880px);
+            height: 2.2em;
+        }
+
+        #introLyric3 {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.4em;
+            font-weight: 700;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #introLyric3.intro-lyric-visible {
+            opacity: 1;
+        }
+
+        #introLyric3.intro-note {
+            font-size: 2em;
+        }
+
+        #introLyric3.intro-note.intro-lyric-visible {
+            opacity: 0.5;
+        }
+
+        #introProgressWrap3 {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #introProgressLabel3 {
+            font-size: 0.78em;
+            letter-spacing: 0.05em;
+            opacity: 0.7;
+        }
+
+        #introVolumeControl3 {
+            position: absolute;
+            top: 82px;
+            right: 60px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        #introVolumeControl3.intro-volume-visible {
+            opacity: 0.85;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #introVolumeControl3:hover {
+            opacity: 1;
+        }
+
+        #introMuteBtn3 {
+            width: 30px;
+            height: 30px;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            padding: 0;
+            opacity: 0.85;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        #introMuteBtn3:hover {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+        #introMuteBtn3 svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
+        #introVolumeSlider3 {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100px;
+            height: 3px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            cursor: pointer;
+        }
+
+        #introVolumeSlider3::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        #introVolumeSlider3::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        #introVolumeSlider3::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border: none;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        #introVolumeSlider3::-moz-range-progress {
             background: rgba(255, 255, 255, 0.75);
             height: 3px;
             border-radius: 3px;
@@ -5430,6 +5729,50 @@ html.has-touch-sensor #mobile-block-screen {
                 </div>
                 <div id="introProgressWrap2">
                     <div id="introProgressLabel2">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="introOverlay3">
+        <div id="introTopControls3">
+            <button id="introBackBtn3" class="intro-btn" type="button" data-en="Back" data-ru="Назад к интро">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span data-en="Back" data-ru="Назад к интро">Назад к интро</span>
+            </button>
+            <button id="introSkipBtn3" class="intro-btn" type="button" data-en="Skip" data-ru="Пропустить">Пропустить</button>
+        </div>
+
+        <div id="introVolumeControl3">
+            <button id="introMuteBtn3" type="button" aria-label="Mute">
+                <svg id="introMuteIcon3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/>
+                    <path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M19 6a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+                    <line id="introMuteSlash3" x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:none;"/>
+                </svg>
+            </button>
+            <input id="introVolumeSlider3" type="range" min="0" max="100" step="1" value="35" aria-label="Volume">
+        </div>
+
+        <div id="introStartScreen3">
+            <div id="introTitle3" data-en="Secret by Egor Nats" data-ru="Secret by Egor Nats">Secret by Egor Nats</div>
+            <button id="introPlayBtn3" class="intro-btn" type="button" data-en="Listen" data-ru="Слушать">Слушать</button>
+        </div>
+
+        <div id="introPlayerScreen3">
+            <video id="introVideo3" playsinline></video>
+            <div id="introVideoDarkOverlay3"></div>
+            <div id="introAuthorSignature3">
+                <div id="introAuthorText3" data-en="Lyrics by: Egor Nats" data-ru="Автор слов: ЕГОР НАТС">Автор слов: ЕГОР НАТС</div>
+                <img id="introAuthorAutograph3" src="assets/AvtoBiographia/NatsAvtograph.png" alt="Автограф Егор Натс">
+            </div>
+            <div id="introContent3">
+                <div id="introLyricSlot3">
+                    <div id="introLyric3"></div>
+                </div>
+                <div id="introProgressWrap3">
+                    <div id="introProgressLabel3">0%</div>
                 </div>
             </div>
         </div>
@@ -6199,8 +6542,6 @@ function navigateToSection(index) {
         return;
     }
 
-
-
     switchSlide();
     updateNavDot(index);
 }
@@ -6537,34 +6878,15 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
     if (metroSection) { metroSection.style.display = 'none'; metroSection.style.opacity = ''; metroSection.style.transition = ''; }
     if (metroStations) { metroStations.style.display = 'none'; metroStations.style.opacity = ''; metroStations.style.transition = ''; }
 
-
-
-
     if (factsSection) { factsSection.style.opacity = ''; factsSection.style.transition = ''; }
-
-
-
-
 
     if (factsSideDecor) { factsSideDecor.style.display = ''; factsSideDecor.style.opacity = ''; factsSideDecor.style.transition = ''; }
 
-
-
-
     if (hobbiesSideDecor) { hobbiesSideDecor.style.display = ''; hobbiesSideDecor.style.opacity = ''; hobbiesSideDecor.style.transition = ''; }
-
-
-
 
     if (hobbySideDecor) { hobbySideDecor.style.display = ''; hobbySideDecor.style.opacity = ''; hobbySideDecor.style.transition = ''; }
 
-
-
-
     if (artistSideDecor) { artistSideDecor.style.display = ''; artistSideDecor.style.opacity = ''; artistSideDecor.style.transition = ''; }
-
-
-
 
     document.querySelectorAll('.about2-facts-card.showing-comment').forEach(card => {
         card.classList.remove('showing-comment');
@@ -6572,20 +6894,12 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
 
     photo.style.display = '';
 
-
-
-
-
     frameImg.style.transition = '';
     frameImg.style.opacity = '';
     frameImg.src = img.src;
     titleTarget.textContent = titleEl ? titleEl.textContent : '';
 
-
     subtitleTarget.innerHTML = textEl ? textEl.innerHTML : '';
-
-
-
 
     const blockNum = (item.id.match(/\d+$/) || ['1'])[0];
     titleTarget.className = 'about2-expand-title pos-' + blockNum;
@@ -6872,11 +7186,6 @@ function closeAbout2Expand() {
         player2.style.display = '';
         player3.style.display = '';
 
-
-
-
-
-
         if (gallerySection) gallerySection.style.display = 'none';
         if (photoPanel) photoPanel.style.display = 'none';
         if (metroSection) metroSection.style.display = 'none';
@@ -7049,8 +7358,6 @@ function setAboutHobbiesLayer(layer, animate) {
     function applyState() {
         titleTarget.textContent = titleSrc[layer] ? titleSrc[layer].textContent : '';
         subtitleTarget.innerHTML = textSrc[layer] ? textSrc[layer].innerHTML : '';
-
-
 
         titleTarget.classList.toggle('pos-3-l2', layer === 2);
         subtitleTarget.classList.toggle('pos-3-l2', layer === 2);
@@ -8662,17 +8969,12 @@ document.addEventListener('dragstart', function(e) {
         var WARM_CACHE_KEY = 'atrityn_resources_warmed';
         var overlay = document.getElementById('introOverlay');
         var overlay2 = document.getElementById('introOverlay2');
-        // Каждый вызов openSecretIntro/backToFirstIntro/closeSecretIntro получает
-        // свой номер. Отложенные setTimeout-колбэки предыдущего вызова сверяются
-        // с этим номером и ничего не делают, если он уже устарел — это чинит
-        // баг, когда быстрый повторный переход (интро1 -> интро2 -> назад ->
-        // интро2 снова) приводил к тому, что старый, ещё не отработавший таймер
-        // прятал оверлей, который новый переход только что показал, и человек
-        // резко видел главную страницу сайта.
+        var overlay3 = document.getElementById('introOverlay3');
+
         var introOverlaySeq = 0;
 
-        // ===== Секретное видео-интро (пасхалка) =====
         var SECRET_PASSWORD = '11121228';
+        var SECRET_PASSWORD_3 = 'Egor Nats';
         var SECRET_RESET_MS = 10000;
         var secretBuffer = '';
         var secretResetTimer = null;
@@ -8695,8 +8997,6 @@ document.addEventListener('dragstart', function(e) {
             rangeSupported: true
         };
 
-        // Качаем первые ~20% байт видео сразу, в фоне, с наивысшим приоритетом —
-        // ещё до аудио и скриншотов основного интро.
         function probeAndPreloadSecretVideo() {
             return fetch(secretVideoUrl, { headers: { 'Range': 'bytes=0-1' } }).then(function (resp) {
                 var cr = resp.headers.get('Content-Range');
@@ -8726,8 +9026,6 @@ document.addEventListener('dragstart', function(e) {
         }
         var secretVideoProbePromise = probeAndPreloadSecretVideo();
 
-        // Догружает оставшиеся ~80% байт (вызывается, когда пользователь нажал
-        // "Слушать" на секретном интро). onProgress получает процент 0..100.
         function loadRemainingSecretVideo(onProgress) {
             if (secretVideo.ready100) {
                 if (onProgress) onProgress(100);
@@ -8794,8 +9092,6 @@ document.addEventListener('dragstart', function(e) {
             secretBuffer = '';
         }
 
-        // Считывание клавиатуры для пасхалки: активно только пока показан
-        // стартовый экран основного интро (до нажатия "Слушать").
         function enableSecretEntry() {
             secretKeyHandler = function (e) {
                 if (secretUnlocked) return;
@@ -8805,15 +9101,33 @@ document.addEventListener('dragstart', function(e) {
 
                 clearTimeout(secretResetTimer);
                 secretBuffer += ch;
-                if (secretBuffer.length > SECRET_PASSWORD.length) {
-                    secretBuffer = secretBuffer.slice(-SECRET_PASSWORD.length);
+
+                var normalizedBuffer = secretBuffer.toLowerCase();
+                var password1 = SECRET_PASSWORD.toLowerCase();
+                var password3 = SECRET_PASSWORD_3.toLowerCase();
+                var maxSecretPasswordLength = Math.max(password1.length, password3.length);
+
+                if (secretBuffer.length > maxSecretPasswordLength) {
+                    secretBuffer = secretBuffer.slice(-maxSecretPasswordLength);
+                    normalizedBuffer = secretBuffer.toLowerCase();
                 }
-                secretResetTimer = setTimeout(function () { secretBuffer = ''; }, SECRET_RESET_MS);
+
+                secretResetTimer = setTimeout(function () {
+                    secretBuffer = '';
+                }, SECRET_RESET_MS);
 
                 if (secretBuffer === SECRET_PASSWORD) {
                     secretUnlocked = true;
                     disableSecretEntry();
                     openSecretIntro();
+                    return;
+                }
+
+                if (normalizedBuffer === password3) {
+                    secretUnlocked = true;
+                    disableSecretEntry();
+                    openSecretIntro3();
+                    return;
                 }
             };
             document.addEventListener('keydown', secretKeyHandler, true);
@@ -8825,18 +9139,6 @@ document.addEventListener('dragstart', function(e) {
             startScreenEl.classList.add('intro-fade-out');
             setTimeout(function () { startScreenEl.style.display = 'none'; }, 400);
 
-            // #introOverlay2 sits after #introOverlay in the DOM, so with equal
-            // z-index it always paints on top. We deliberately keep #introOverlay
-            // fully visible underneath while #introOverlay2 fades in — that way
-            // any semi-transparency during the crossfade shows the (dark) first
-            // overlay, never the real page underneath (fixes the "Главная" flash).
-            // Снимаем 'intro-hidden' сразу: если это повторное открытие после
-            // возврата на интро 1, backToFirstIntro() оставил этот класс на
-            // overlay2. Из-за порядка правил в CSS .intro-hidden перебивает
-            // .intro2-visible при одновременном наличии обоих классов, и без
-            // этой строки overlay2 остаётся невидимым (opacity:0,
-            // pointer-events:none) — из-за чего после скрытия интро 1 виден
-            // сразу сайт, а не интро 2.
             overlay2.classList.remove('intro-hidden');
             overlay2.style.display = 'flex';
             requestAnimationFrame(function () {
@@ -8846,7 +9148,6 @@ document.addEventListener('dragstart', function(e) {
                 });
             });
 
-            // Only hide the first overlay once the second one is fully opaque.
             setTimeout(function () {
                 if (seq !== introOverlaySeq) return;
                 overlay.classList.add('intro-hidden');
@@ -8865,7 +9166,6 @@ document.addEventListener('dragstart', function(e) {
             currentLyricIndex2 = -1;
             secretFinished = true;
 
-            // Reset the secret intro back to its own start screen for next time.
             playerScreen2.classList.remove('intro-active');
             lyricEl2.classList.remove('intro-lyric-visible');
             lyricEl2.textContent = '';
@@ -8876,9 +9176,6 @@ document.addEventListener('dragstart', function(e) {
             startScreen2.classList.remove('intro-fade-out');
             if (backBtn2) backBtn2.classList.remove('intro2-btn-hidden');
 
-            // Bring the first overlay back, fully, while the second overlay
-            // (still on top, still opaque) keeps covering the real page —
-            // same anti-flash trick as openSecretIntro, in reverse.
             overlay.style.display = 'flex';
             startScreen.style.display = 'flex';
             startScreen.classList.remove('intro-fade-out');
@@ -8916,10 +9213,404 @@ document.addEventListener('dragstart', function(e) {
                 overlay2.style.display = 'none';
             }, 900);
         }
-        // ===== /Секретное видео-интро =====
+
+        var startScreen3 = document.getElementById('introStartScreen3');
+        var playerScreen3 = document.getElementById('introPlayerScreen3');
+        var playBtn3 = document.getElementById('introPlayBtn3');
+        var skipBtn3 = document.getElementById('introSkipBtn3');
+        var backBtn3 = document.getElementById('introBackBtn3');
+        var secretVideoEl3 = document.getElementById('introVideo3');
+        var lyricEl3 = document.getElementById('introLyric3');
+        var progressLabel3 = document.getElementById('introProgressLabel3');
+        var volumeControl3 = document.getElementById('introVolumeControl3');
+        var volumeSlider3 = document.getElementById('introVolumeSlider3');
+        var muteBtn3 = document.getElementById('introMuteBtn3');
+        var muteSlash3 = document.getElementById('introMuteSlash3');
+        var authorSignatureEl3 = document.getElementById('introAuthorSignature3');
+
+        var SECRET3_VIDEO_URL = 'assets/AvtoBiographia/Secrets2/Nats.mp4';
+        var SECRET3_VOLUME_KEY = 'atrityn_intro3_volume';
+        var SECRET3_MUTED_KEY = 'atrityn_intro3_muted';
+        var secret3Volume = 0.35;
+        var secret3Muted = false;
+        var secret3Finished = false;
+        var secret3RafId = null;
+        var currentLyricIndex3 = -1;
+        var secret3Video = {
+            total: 0,
+            initialChunks: [],
+            initialLoadedBytes: 0,
+            ready20: false,
+            ready100: false,
+            loadingRemaining: false,
+            loadingRemainingPromise: null,
+            blobUrl: null,
+            rangeSupported: true
+        };
+
+        try {
+            var storedVol3 = sessionStorage.getItem(SECRET3_VOLUME_KEY);
+            if (storedVol3 !== null && !isNaN(parseFloat(storedVol3))) {
+                secret3Volume = Math.min(1, Math.max(0, parseFloat(storedVol3)));
+            }
+            secret3Muted = sessionStorage.getItem(SECRET3_MUTED_KEY) === '1';
+        } catch (e) {}
+
+        function applySecret3VolumeUI() {
+            if (!volumeSlider3) return;
+            volumeSlider3.value = Math.round(secret3Volume * 100);
+            muteSlash3.style.display = secret3Muted ? '' : 'none';
+            muteBtn3.setAttribute('aria-label', secret3Muted ? 'Unmute' : 'Mute');
+        }
+
+        function applySecret3VolumeToVideo() {
+            if (!secretVideoEl3) return;
+            secretVideoEl3.volume = secret3Volume;
+            secretVideoEl3.muted = secret3Muted;
+        }
+
+        applySecret3VolumeUI();
+
+        volumeSlider3.addEventListener('input', function () {
+            secret3Volume = Math.min(1, Math.max(0, parseInt(volumeSlider3.value, 10) / 100));
+            if (secret3Volume > 0 && secret3Muted) secret3Muted = false;
+            applySecret3VolumeUI();
+            applySecret3VolumeToVideo();
+            try {
+                sessionStorage.setItem(SECRET3_VOLUME_KEY, String(secret3Volume));
+                sessionStorage.setItem(SECRET3_MUTED_KEY, secret3Muted ? '1' : '0');
+            } catch (e) {}
+        });
+
+        muteBtn3.addEventListener('click', function () {
+            secret3Muted = !secret3Muted;
+            applySecret3VolumeUI();
+            applySecret3VolumeToVideo();
+            try { sessionStorage.setItem(SECRET3_MUTED_KEY, secret3Muted ? '1' : '0'); } catch (e) {}
+        });
+
+        var LYRICS3 = [
+            { t: 0, text: '♪', note: true },
+            { t: 14.5, text: 'Меня закрутит очередной день, в моей башке бесконечные мысли' },
+            { t: 18, text: 'Я закрутил, чтобы не улететь, наоборот, надо приземлиться' },
+            { t: 22, text: 'Все эти люди хотят быстрей себя довести до самоубийства' },
+            { t: 25.5, text: 'А я просто думаю о тебе, без тебя не спится' },
+            { t: 30, text: 'Мы можем с тобой молчать, я знаю, что ты хочешь' },
+            { t: 33, text: 'Твои слёзы — моя печаль, рвут моё сердце в клочья' },
+            { t: 37, text: 'А я в комнате одичал' },
+            { t: 39, text: 'И под покровом ночи' },
+            { t: 40.5, text: 'В тишину пустую кричал:' },
+            { t: 43, text: '«Мне без тебя не очень»' },
+            { t: 44.5, text: '♪', note: true },
+            { t: 46.5, text: 'Холодный ветер в лицо, я куда-то сбегаю' },
+            { t: 50.5, text: 'От этих песен, людей и от воспоминаний' },
+            { t: 54, text: 'Говорю честно, мне сильно тебя не хватает' },
+            { t: 57.5, text: 'Меня трясёт и колотит — я очень скучаю' },
+            { t: 61.5, text: 'Холодный ветер в лицо, я куда-то сбегаю' },
+            { t: 65.5, text: 'От этих песен, людей и от воспоминаний' },
+            { t: 69, text: 'Говорю честно, мне сильно тебя не хватает' },
+            { t: 73, text: 'Меня трясёт и колотит — я очень скучаю' },
+            { t: 77, text: 'Я знаю, ты тоже скучаешь по мне' },
+            { t: 78.5, text: 'Мы не увидимся с тобой, я много работаю с тем, чтобы не умереть' },
+            { t: 84.5, text: 'Твои губы — моя награда' },
+            { t: 86.5, text: 'Не нужны другие медали, ты это знаешь' },
+            { t: 90, text: 'Сгораем внутри себя, банальные побочки' },
+            { t: 93.5, text: 'Я ещё не схожу с ума, но это не точно' },
+            { t: 97, text: 'Просто в комнате одичал' },
+            { t: 98.5, text: 'И под покровом ночи' },
+            { t: 100.5, text: 'В тишину пустую кричал:' },
+            { t: 102.5, text: '«Мне без тебя не очень»' },
+            { t: 106.5, text: 'Холодный ветер в лицо, я куда-то сбегаю' },
+            { t: 110, text: 'От этих песен, людей и от воспоминаний' },
+            { t: 114.5, text: 'Говорю честно, мне сильно тебя не хватает' },
+            { t: 118, text: 'Меня трясёт и колотит — я очень скучаю' },
+            { t: 121.5, text: 'Холодный ветер в лицо, я куда-то сбегаю' },
+            { t: 125.5, text: 'От этих песен, людей и от воспоминаний' },
+            { t: 129, text: 'Говорю честно, мне сильно тебя не хватает' },
+            { t: 133, text: 'Меня трясёт и колотит — я очень скучаю' },
+            { t: 136, text: '♪', note: true },
+            { t: 150, text: '', author: true }
+        ];
+
+        function updateLyric3(time) {
+            if (!lyricEl3) return;
+            var idx = 0;
+            for (var i = 0; i < LYRICS3.length; i++) {
+                if (time >= LYRICS3[i].t) idx = i;
+                else break;
+            }
+            if (idx === currentLyricIndex3) return;
+            currentLyricIndex3 = idx;
+            var item = LYRICS3[idx];
+
+            if (item.author) {
+                lyricEl3.style.transitionDuration = '450ms';
+                lyricEl3.classList.remove('intro-lyric-visible');
+                return;
+            }
+
+            lyricEl3.style.transitionDuration = '450ms';
+            lyricEl3.classList.remove('intro-lyric-visible');
+            setTimeout(function () {
+                if (secret3Finished) return;
+                lyricEl3.textContent = item.text || '';
+                lyricEl3.classList.toggle('intro-note', !!item.note);
+                if (item.text) {
+                    lyricEl3.style.transitionDuration = (item.fadeInMs || 450) + 'ms';
+                    lyricEl3.classList.add('intro-lyric-visible');
+                }
+            }, 450);
+        }
+
+        function updateSecret3Progress() {
+            if (!secretVideoEl3.duration || isNaN(secretVideoEl3.duration)) return;
+            var pct = Math.min(100, Math.max(1, Math.round((secretVideoEl3.currentTime / secretVideoEl3.duration) * 100)));
+            progressLabel3.textContent = pct + '%';
+        }
+
+        function secret3Loop() {
+            if (secret3Finished) return;
+            var currentTime3 = secretVideoEl3.currentTime;
+            updateLyric3(currentTime3);
+            updateSecret3Progress();
+            if (currentTime3 >= 150 && !authorSignatureEl3.classList.contains('intro-signature-visible')) {
+                authorSignatureEl3.classList.add('intro-signature-visible');
+            }
+            secret3RafId = requestAnimationFrame(secret3Loop);
+        }
+
+        function probeAndPreloadSecret3Video() {
+            if (secret3Video.ready20) return Promise.resolve();
+            return fetch(SECRET3_VIDEO_URL, { headers: { 'Range': 'bytes=0-1' } }).then(function (resp) {
+                var cr = resp.headers.get('Content-Range');
+                var total = null;
+                if (cr) {
+                    var m = /\/(\d+)$/.exec(cr);
+                    if (m) total = parseInt(m[1], 10);
+                }
+                if (resp.status !== 206 || !total) {
+                    secret3Video.rangeSupported = false;
+                    secret3Video.ready20 = true;
+                    return;
+                }
+                secret3Video.total = total;
+                var cutoff = Math.max(1, Math.floor(total * 0.2));
+                return fetch(SECRET3_VIDEO_URL, { headers: { 'Range': 'bytes=0-' + cutoff } }).then(function (r2) {
+                    return r2.arrayBuffer();
+                }).then(function (buf) {
+                    secret3Video.initialChunks = [buf];
+                    secret3Video.initialLoadedBytes = cutoff + 1;
+                    secret3Video.ready20 = true;
+                });
+            }).catch(function () {
+                secret3Video.rangeSupported = false;
+                secret3Video.ready20 = true;
+            });
+        }
+
+        function loadRemainingSecret3Video(onProgress) {
+            if (secret3Video.ready100 && secret3Video.blobUrl) {
+                if (onProgress) onProgress(100);
+                return Promise.resolve(secret3Video.blobUrl);
+            }
+            if (!secret3Video.rangeSupported || !secret3Video.total) {
+                return Promise.reject(new Error('Range loading is not supported'));
+            }
+            if (secret3Video.loadingRemainingPromise) return secret3Video.loadingRemainingPromise;
+
+            secret3Video.loadingRemaining = true;
+            var start = secret3Video.initialLoadedBytes;
+            secret3Video.loadingRemainingPromise = fetch(SECRET3_VIDEO_URL, {
+                headers: { 'Range': 'bytes=' + start + '-' }
+            }).then(function (resp) {
+                if (!resp.ok) throw new Error('Video request failed: ' + resp.status);
+                var reader = resp.body && resp.body.getReader ? resp.body.getReader() : null;
+                if (!reader) throw new Error('Streaming reader is unavailable');
+
+                var chunks = secret3Video.initialChunks.slice();
+                var received = start;
+                function pump() {
+                    return reader.read().then(function (res) {
+                        if (res.done) return;
+                        chunks.push(res.value);
+                        received += res.value.length;
+                        if (onProgress) onProgress(Math.min(99, Math.round((received / secret3Video.total) * 100)));
+                        return pump();
+                    });
+                }
+                return pump().then(function () {
+                    var blob = new Blob(chunks, { type: 'video/mp4' });
+                    secret3Video.blobUrl = URL.createObjectURL(blob);
+                    secret3Video.ready100 = true;
+                    if (onProgress) onProgress(100);
+                    return secret3Video.blobUrl;
+                });
+            });
+            return secret3Video.loadingRemainingPromise;
+        }
+
+        function resetSecret3UI() {
+            if (secret3RafId) cancelAnimationFrame(secret3RafId);
+            try { secretVideoEl3.pause(); } catch (e) {}
+            secret3Finished = true;
+            currentLyricIndex3 = -1;
+            lyricEl3.classList.remove('intro-lyric-visible');
+            lyricEl3.textContent = '';
+            progressLabel3.textContent = '0%';
+            authorSignatureEl3.classList.remove('intro-signature-visible');
+            volumeControl3.classList.remove('intro-volume-visible');
+            playerScreen3.classList.remove('intro-active');
+            startScreen3.style.display = 'flex';
+            startScreen3.classList.remove('intro-fade-out');
+            backBtn3.classList.remove('intro3-btn-hidden');
+        }
+
+        function preloadSecret3Video() {
+            if (secretVideoEl3.dataset.preloaded === '1') return;
+            secretVideoEl3.dataset.preloaded = '1';
+            secretVideoEl3.preload = 'auto';
+            secretVideoEl3.src = SECRET3_VIDEO_URL;
+            try { secretVideoEl3.load(); } catch (e) {}
+        }
+
+        function openSecretIntro3() {
+            preloadSecret3Video();
+            var seq = ++introOverlaySeq;
+            resetSecret3UI();
+
+            startScreen.style.display = 'flex';
+            startScreen.classList.add('intro-fade-out');
+
+            overlay3.classList.remove('intro-hidden');
+            overlay3.style.display = 'flex';
+
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    if (seq !== introOverlaySeq) return;
+                    overlay3.classList.add('intro3-visible');
+                });
+            });
+
+            setTimeout(function () {
+                if (seq !== introOverlaySeq) return;
+                overlay.classList.add('intro-hidden');
+                setTimeout(function () {
+                    if (seq !== introOverlaySeq) return;
+                    overlay.style.display = 'none';
+                }, 1000);
+            }, 850);
+        }
+
+        function backToFirstIntro3() {
+            var seq = ++introOverlaySeq;
+            resetSecret3UI();
+
+            overlay.style.display = 'flex';
+            startScreen.style.display = 'flex';
+            startScreen.classList.remove('intro-fade-out');
+            overlay.classList.remove('intro-hidden');
+
+            secretUnlocked = false;
+            disableSecretEntry();
+            enableSecretEntry();
+
+            setTimeout(function () {
+                if (seq !== introOverlaySeq) return;
+                overlay3.classList.remove('intro3-visible');
+                overlay3.classList.add('intro-hidden');
+                setTimeout(function () {
+                    if (seq !== introOverlaySeq) return;
+                    overlay3.style.display = 'none';
+                }, 900);
+            }, 1050);
+        }
+
+        function closeSecretIntro3() {
+            var seq = ++introOverlaySeq;
+            secret3Finished = true;
+            if (secret3RafId) cancelAnimationFrame(secret3RafId);
+            try { secretVideoEl3.pause(); } catch (e) {}
+            volumeControl3.classList.remove('intro-volume-visible');
+            currentLyricIndex3 = -1;
+            try { markShown(); } catch (e) {}
+
+            overlay3.classList.remove('intro3-visible');
+            overlay3.classList.add('intro-hidden');
+            document.title = 'Home';
+
+            setTimeout(function () {
+                if (seq !== introOverlaySeq) return;
+                overlay3.style.display = 'none';
+            }, 900);
+        }
+
+        playBtn3.addEventListener('click', function () {
+            startScreen3.classList.add('intro-fade-out');
+            setTimeout(function () { startScreen3.style.display = 'none'; }, 400);
+            playerScreen3.classList.add('intro-active');
+            progressLabel3.textContent = '0%';
+            backBtn3.classList.add('intro3-btn-hidden');
+            currentLyricIndex3 = -1;
+            authorSignatureEl3.classList.remove('intro-signature-visible');
+            secret3Finished = false;
+            updateLyric3(0);
+
+            probeAndPreloadSecret3Video().then(function () {
+                return loadRemainingSecret3Video(function (pct) {
+                    progressLabel3.textContent = pct + '%';
+                });
+            }).then(function (blobUrl) {
+                secretVideoEl3.src = blobUrl;
+                applySecret3VolumeToVideo();
+                volumeControl3.classList.add('intro-volume-visible');
+                var playPromise = secretVideoEl3.play();
+                if (playPromise && playPromise.catch) {
+                    playPromise.catch(function () {
+                        secretVideoEl3.muted = true;
+                        secretVideoEl3.play().catch(function () {});
+                    });
+                }
+                secret3Finished = false;
+                updateLyric3(0);
+                secret3RafId = requestAnimationFrame(secret3Loop);
+            }).catch(function (err) {
+                console.warn('Третье секретное интро: потоковая загрузка не удалась, пробуем обычное воспроизведение', err);
+                progressLabel3.textContent = '';
+                secretVideoEl3.src = SECRET3_VIDEO_URL;
+                applySecret3VolumeToVideo();
+                volumeControl3.classList.add('intro-volume-visible');
+                var fallbackPlay = secretVideoEl3.play();
+                if (fallbackPlay && fallbackPlay.catch) {
+                    fallbackPlay.catch(function () {
+                        secretVideoEl3.muted = true;
+                        secretVideoEl3.play().catch(function () {
+                            closeSecretIntro3();
+                        });
+                    });
+                }
+                secret3Finished = false;
+                updateLyric3(0);
+                secret3RafId = requestAnimationFrame(secret3Loop);
+            });
+        });
+
+        skipBtn3.addEventListener('click', closeSecretIntro3);
+        backBtn3.addEventListener('click', backToFirstIntro3);
+        secretVideoEl3.addEventListener('timeupdate', function () {
+            if (!secret3Finished && secretVideoEl3.currentTime >= 153) {
+                secret3Finished = true;
+                if (secret3RafId) cancelAnimationFrame(secret3RafId);
+                try { secretVideoEl3.pause(); } catch (e) {}
+                authorSignatureEl3.classList.add('intro-signature-visible');
+                closeSecretIntro3();
+            }
+        });
+        secretVideoEl3.addEventListener('ended', function () {
+            if (!secret3Finished) closeSecretIntro3();
+        });
 
         function startPreload() {
-            var priorityUrls = ['assets/AvtoBiographia/avtobiografia.mp3', 'assets/AllScreenshorts/screenshot_4_1.png', 'assets/AllScreenshorts/screenshot_4_2.png', 'assets/AllScreenshorts/screenshot_4_3.png'];
+            var priorityUrls = ['assets/AvtoBiographia/Secrets2/Nats.png', 'assets/AvtoBiographia/NatsAvtograph.png', 'assets/AvtoBiographia/avtobiografia.mp3', 'assets/AllScreenshorts/screenshot_4_1.png', 'assets/AllScreenshorts/screenshot_4_2.png', 'assets/AllScreenshorts/screenshot_4_3.png'];
 
             if (typeof about2Skins !== 'undefined' && about2Skins && about2Skins.length) {
                 about2Skins.forEach(function (skin) {
@@ -9237,7 +9928,6 @@ document.addEventListener('dragstart', function(e) {
         skipBtn.addEventListener('click', closeIntro);
         audio.addEventListener('ended', showAuthorSignatureThenClose);
 
-        // ===== Секретное видео-интро: элементы и обработчики =====
         var startScreen2 = document.getElementById('introStartScreen2');
         var playerScreen2 = document.getElementById('introPlayerScreen2');
         var playBtn2 = document.getElementById('introPlayBtn2');
@@ -9252,7 +9942,6 @@ document.addEventListener('dragstart', function(e) {
         var muteBtn2 = document.getElementById('introMuteBtn2');
         var muteSlash2 = document.getElementById('introMuteSlash2');
 
-        // ===== Громкость секретного видео-интро (по умолчанию 35%) =====
         var INTRO2_VOLUME_KEY = 'atrityn_intro2_volume';
         var INTRO2_MUTED_KEY = 'atrityn_intro2_muted';
         var secretVolume = 0.35;
@@ -9297,7 +9986,6 @@ document.addEventListener('dragstart', function(e) {
             applySecretVolumeToVideo();
             try { sessionStorage.setItem(INTRO2_MUTED_KEY, secretMuted ? '1' : '0'); } catch (e) {}
         });
-        // ===== /Громкость секретного видео-интро =====
 
         var LYRICS2 = [
             { t: 0,    text: '♪', note: true },
@@ -9366,7 +10054,6 @@ document.addEventListener('dragstart', function(e) {
             var pct = Math.min(100, Math.max(1, Math.round((secretVideoEl.currentTime / secretVideoEl.duration) * 100)));
             progressLabel2.textContent = pct + '%';
 
-            // Показать «Автор слов: Дора» + автограф за 3-5% до конца видео.
             if (!signatureShown2 && secretVideoEl.duration - secretVideoEl.currentTime <= secretVideoEl.duration * 0.04) {
                 signatureShown2 = true;
                 authorSignatureEl2.classList.add('intro-signature-visible');
@@ -9408,9 +10095,7 @@ document.addEventListener('dragstart', function(e) {
                 updateLyric2(0);
                 secretRafId = requestAnimationFrame(secretLoop);
             }).catch(function (err) {
-                // Потоковая (fetch/Range) загрузка не удалась — например, сайт
-                // открыт напрямую как файл (file://), где fetch с Range блокируется.
-                // Пробуем воспроизвести видео обычным способом через <video src>.
+
                 console.warn('Секретное интро: fetch-загрузка видео не удалась, пробуем обычное воспроизведение', err);
                 progressLabel2.textContent = '';
                 secretVideoEl.src = secretVideoUrl;
@@ -9436,7 +10121,7 @@ document.addEventListener('dragstart', function(e) {
 
         var backBtn2 = document.getElementById('introBackBtn2');
         if (backBtn2) backBtn2.addEventListener('click', backToFirstIntro);
-        // ===== /Секретное видео-интро: элементы и обработчики =====
+
     })();
     </script>
 
@@ -9896,12 +10581,6 @@ document.addEventListener('dragstart', function(e) {
             }
         }
 
-        // --- Уровни доступа к плиткам "Обо мне слой 2" ---
-        // Число после дефиса в конце логина/пароля определяет, сколько первых
-        // плиток (Любимый исполнитель → Моё хобби → Мои увлечения) остаются
-        // заблокированными. Без суффикса — доступны все 4 плитки.
-        // Суффикс -5 — особый уровень: блокирует абсолютно все 4 плитки
-        // (полный запрет доступа к "Обо мне слой 2").
         var LEVEL_STORAGE_KEY = 'about2_level';
         var A2_ITEM_IDS = ['a2-item1', 'a2-item2', 'a2-item3', 'a2-item4'];
 
@@ -9911,7 +10590,7 @@ document.addEventListener('dragstart', function(e) {
             if (!m) return 1;
             var n = parseInt(m[1], 10);
             if (!n || n < 1) return 1;
-            // Уровень 5 — особый: блокирует вообще все плитки (полный запрет).
+
             if (n > 5) n = 5;
             return n;
         }
@@ -9919,8 +10598,7 @@ document.addEventListener('dragstart', function(e) {
         function computeAccessLevel(login, password) {
             var lvlLogin = extractLevel(login);
             var lvlPassword = extractLevel(password);
-            // Если суффиксы логина и пароля не совпадают (опечатка при выдаче
-            // доступа) — подстраховываемся и берём более строгий (больший) уровень.
+
             return Math.max(lvlLogin, lvlPassword);
         }
 
@@ -9943,7 +10621,7 @@ document.addEventListener('dragstart', function(e) {
 
         function applyAboutLayer2AccessLevel() {
             var level = getStoredLevel();
-            // Уровень 5 = полная блокировка: все плитки недоступны.
+
             var hiddenCount = (level >= 5) ? A2_ITEM_IDS.length : (level - 1);
             A2_ITEM_IDS.forEach(function (id, idx) {
                 var el = document.getElementById(id);
@@ -10156,11 +10834,8 @@ document.addEventListener('dragstart', function(e) {
             { id: 'singapore', kind: 'city', ru: 'Сингапур', en: 'Singapore', tz: 'Asia/Singapore', lat: 1.3521, lon: 103.8198, icon: 'Singapore.png', iconBlue: 'Singapore-blue.png' }
         ];
 
-        // Папка с иконками городов (скайлайны).
         var CITY_ICON_PATH = 'assets/City Icons/';
 
-        // Словарь для русификации самых частых городов, которые может вернуть IP-геолокация.
-        // Если города нет в словаре, будет показано оригинальное (латинское) название.
         var CITY_RU_DICT = {
             'Moscow': 'Москва', 'Saint Petersburg': 'Санкт-Петербург', 'St Petersburg': 'Санкт-Петербург',
             'Novosibirsk': 'Новосибирск', 'Yekaterinburg': 'Екатеринбург', 'Kazan': 'Казань',
@@ -10178,9 +10853,6 @@ document.addEventListener('dragstart', function(e) {
             'Stockholm': 'Стокгольм', 'Oslo': 'Осло', 'Copenhagen': 'Копенгаген', 'Dublin': 'Дублин'
         };
 
-        // Широкий список крупных городов мира с координатами — используется, чтобы
-        // при автоопределении по IP показывать ближайший крупный город, а не
-        // произвольный маленький населённый пункт из ответа IP-сервиса.
         var MAJOR_CITIES = [
             { en: 'New York', ru: 'Нью-Йорк', lat: 40.7128, lon: -74.006 },
             { en: 'Los Angeles', ru: 'Лос-Анджелес', lat: 34.0522, lon: -118.2437 },
@@ -10667,8 +11339,6 @@ document.addEventListener('dragstart', function(e) {
             }
         }
 
-        // Подгоняем высоту панели/списка так, чтобы она не выходила за нижний край экрана,
-        // а список городов при необходимости прокручивался колесиком.
         function adjustPanelHeight() {
             var scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1;
             if (!scale) scale = 1;
@@ -10677,8 +11347,6 @@ document.addEventListener('dragstart', function(e) {
             var triggerRect = trigger.getBoundingClientRect();
             var availableScreenPx = window.innerHeight - triggerRect.bottom - screenMargin;
 
-            // Переводим доступное пространство из реальных пикселей экрана
-            // в "внутренние" пиксели stage (который может быть отмасштабирован).
             var availableStagePx = availableScreenPx / scale;
 
             var headerEl = panelEl.querySelector('.home-clock-panel-header');
@@ -10729,7 +11397,7 @@ document.addEventListener('dragstart', function(e) {
         document.addEventListener('click', function (e) {
             if (!widget.contains(e.target)) closePanel();
         });
-        // Не даём общей wheel-навигации по секциям сайта перехватывать прокрутку списка городов.
+
         [listEl, panelEl].forEach(function (el) {
             if (el) el.addEventListener('wheel', function (e) { e.stopPropagation(); }, { passive: true });
         });
