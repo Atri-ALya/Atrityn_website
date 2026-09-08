@@ -6850,8 +6850,28 @@ body.light-theme .rounded-border13 {
         display: none !important;
     }
 
-    .a2-lock-badge {
+    .about2-item.a2-locked .a2-mobile-title,
+    .about2-item.a2-locked .a2-mobile-expand-text {
         display: none !important;
+    }
+
+    .about2-item.a2-locked .a2-lock-badge {
+        display: flex !important;
+        gap: 12px;
+    }
+
+    .about2-item.a2-locked .a2-lock-badge svg {
+        width: 42px;
+        height: 42px;
+    }
+
+    .about2-item.a2-locked .a2-lock-label-vertical {
+        display: none !important;
+    }
+
+    .about2-item.a2-locked .a2-lock-label-horizontal {
+        opacity: 1 !important;
+        font-size: 1.05rem !important;
     }
 }
 </style>
