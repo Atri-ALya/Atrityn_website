@@ -12999,16 +12999,23 @@ function applyMediaSessionMetadata(track) {
     if (!('mediaSession' in navigator)) return;
     setupMediaSessionActions();
     try {
+        // iOS Control Center is strict about artwork URLs: relative paths and
+        // unescaped characters (our cover paths contain spaces, e.g.
+        // "assets/Nats Oblojki/...") can silently fail to load there, even
+        // though a plain <img> tag tolerates them fine. Resolving through
+        // the URL constructor gives an absolute, properly percent-encoded URL.
+        var artworkUrl = track.cover ? new URL(track.cover, window.location.href).href : null;
+
         navigator.mediaSession.metadata = new MediaMetadata({
             title: track.title,
             artist: track.artist,
             album: 'atrityn.ru',
-            artwork: track.cover ? [
-                { src: track.cover, sizes: '96x96', type: 'image/png' },
-                { src: track.cover, sizes: '192x192', type: 'image/png' },
-                { src: track.cover, sizes: '256x256', type: 'image/png' },
-                { src: track.cover, sizes: '384x384', type: 'image/png' },
-                { src: track.cover, sizes: '512x512', type: 'image/png' }
+            artwork: artworkUrl ? [
+                { src: artworkUrl, sizes: '96x96', type: 'image/png' },
+                { src: artworkUrl, sizes: '192x192', type: 'image/png' },
+                { src: artworkUrl, sizes: '256x256', type: 'image/png' },
+                { src: artworkUrl, sizes: '384x384', type: 'image/png' },
+                { src: artworkUrl, sizes: '512x512', type: 'image/png' }
             ] : []
         });
     } catch (e) {}
