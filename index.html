@@ -12550,6 +12550,13 @@ function buildAbout2TrackList(containerId, tracks) {
                 timeEl.textContent = '00:00 / ' + formatAbout2Time(audio.duration);
             }
             updateAbout2BufferedUI(audio, seekBufferedEl, track);
+            if (about2CurrentTrackId === track.id) updateMediaSessionPositionState(audio);
+        });
+        audio.addEventListener('play', () => {
+            if (about2CurrentTrackId === track.id) setMediaSessionPlaybackState('playing');
+        });
+        audio.addEventListener('pause', () => {
+            if (about2CurrentTrackId === track.id) setMediaSessionPlaybackState('paused');
         });
         audio.addEventListener('timeupdate', () => {
             timeEl.textContent = formatAbout2Time(audio.currentTime) + ' / ' + formatAbout2Time(audio.duration);
@@ -12558,6 +12565,7 @@ function buildAbout2TrackList(containerId, tracks) {
 
             if (about2CurrentTrackId === track.id) {
                 updateMiniPlayerTime(timeEl.textContent, pct);
+                updateMediaSessionPositionState(audio);
             }
         });
 
@@ -12572,6 +12580,7 @@ function buildAbout2TrackList(containerId, tracks) {
             timeEl.textContent = '00:00 / ' + formatAbout2Time(audio.duration);
             seekFillEl.style.width = '0%';
             resetAboutArtistAccent();
+            clearMediaSession();
             updateMiniPlayerVisibility();
         });
 
@@ -12736,6 +12745,7 @@ function toggleAbout2Track(track) {
         updateMiniPlayerContent(track);
         updateMiniPlayerVolumeUI(audio);
         applyAboutArtistAccent(track);
+        applyMediaSessionMetadata(track);
 
         updateAbout2BufferedUI(audio, track._seekBufferedEl, track);
     } else {
@@ -12783,6 +12793,7 @@ function about2StopMusic() {
     about2CurrentAudio = null;
     about2CurrentTrackId = null;
     resetAboutArtistAccent();
+    clearMediaSession();
     updateMiniPlayerVisibility();
 }
 
@@ -12950,6 +12961,82 @@ function syncTrackVolumeUI(track) {
     const slider = document.getElementById('about2-vol-' + track.id);
     const wrap = slider ? slider.closest('.about2-track-volume') : null;
     if (slider && wrap) updateVolumeControlUI(slider, wrap, track._audio);
+}
+
+// --- Media Session (native iOS/Android "Now Playing" widget) ---
+// Feeds title/artist/cover art into the OS-level media controls
+// (Control Center, lock screen, Dynamic Island, Android notification)
+// so they show real track info instead of a generic speaker icon.
+var mediaSessionActionsReady = false;
+
+function setupMediaSessionActions() {
+    if (mediaSessionActionsReady) return;
+    if (!('mediaSession' in navigator)) return;
+    mediaSessionActionsReady = true;
+
+    try {
+        navigator.mediaSession.setActionHandler('play', function () {
+            var track = findAbout2Track(about2CurrentTrackId);
+            if (track && track._audio && track._audio.paused) toggleAbout2Track(track);
+        });
+        navigator.mediaSession.setActionHandler('pause', function () {
+            var track = findAbout2Track(about2CurrentTrackId);
+            if (track && track._audio && !track._audio.paused) toggleAbout2Track(track);
+        });
+        navigator.mediaSession.setActionHandler('stop', function () {
+            about2StopMusic();
+        });
+        navigator.mediaSession.setActionHandler('seekto', function (details) {
+            var track = findAbout2Track(about2CurrentTrackId);
+            if (track && track._audio && typeof details.seekTime === 'number') {
+                track._audio.currentTime = details.seekTime;
+            }
+        });
+    } catch (e) {}
+}
+
+function applyMediaSessionMetadata(track) {
+    if (!('mediaSession' in navigator)) return;
+    setupMediaSessionActions();
+    try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.title,
+            artist: track.artist,
+            album: 'atrityn.ru',
+            artwork: track.cover ? [
+                { src: track.cover, sizes: '96x96', type: 'image/png' },
+                { src: track.cover, sizes: '192x192', type: 'image/png' },
+                { src: track.cover, sizes: '256x256', type: 'image/png' },
+                { src: track.cover, sizes: '384x384', type: 'image/png' },
+                { src: track.cover, sizes: '512x512', type: 'image/png' }
+            ] : []
+        });
+    } catch (e) {}
+}
+
+function setMediaSessionPlaybackState(state) {
+    if (!('mediaSession' in navigator)) return;
+    try { navigator.mediaSession.playbackState = state; } catch (e) {}
+}
+
+function updateMediaSessionPositionState(audio) {
+    if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
+    if (!audio || !isFinite(audio.duration) || audio.duration <= 0) return;
+    try {
+        navigator.mediaSession.setPositionState({
+            duration: audio.duration,
+            playbackRate: audio.playbackRate || 1,
+            position: Math.min(audio.currentTime, audio.duration)
+        });
+    } catch (e) {}
+}
+
+function clearMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    try {
+        navigator.mediaSession.metadata = null;
+        navigator.mediaSession.playbackState = 'none';
+    } catch (e) {}
 }
 
 function updateMiniPlayerContent(track) {
