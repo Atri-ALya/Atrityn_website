@@ -13097,16 +13097,26 @@ updateAboutToggleButton();
     const darkVideo = document.getElementById('dark-theme-video');
     const lightVideo = document.getElementById('light-theme-video');
 
+    window.__bgCanvasActive = window.__bgCanvasActive || { dark: true, light: false };
+
     if (document.body.classList.contains('light-theme')) {
+        window.__bgCanvasActive.light = true;
         darkVideo.style.opacity = '0';
-        setTimeout(() => darkVideo.style.display = 'none', 800);
+        setTimeout(() => {
+            darkVideo.style.display = 'none';
+            window.__bgCanvasActive.dark = false;
+        }, 800);
         lightVideo.style.display = 'block';
         void lightVideo.offsetWidth;
 
         lightVideo.style.opacity = '1';
     } else {
+        window.__bgCanvasActive.dark = true;
         lightVideo.style.opacity = '0';
-        setTimeout(() => lightVideo.style.display = 'none', 800);
+        setTimeout(() => {
+            lightVideo.style.display = 'none';
+            window.__bgCanvasActive.light = false;
+        }, 800);
         darkVideo.style.display = 'block';
         void darkVideo.offsetWidth;
         darkVideo.style.opacity = '1';
@@ -13114,13 +13124,35 @@ updateAboutToggleButton();
 }
 
         (function initBgCanvas() {
-            function setupCanvas(canvas, palette) {
+            window.__bgCanvasActive = window.__bgCanvasActive || { dark: true, light: false };
+
+            function makeGlowSprite(hue) {
+                const size = 128;
+                const off = document.createElement('canvas');
+                off.width = size;
+                off.height = size;
+                const octx = off.getContext('2d');
+                const r = size / 2;
+                const g = octx.createRadialGradient(r, r, 0, r, r, r);
+                g.addColorStop(0, 'rgba(' + hue + ',0.45)');
+                g.addColorStop(1, 'rgba(' + hue + ',0)');
+                octx.fillStyle = g;
+                octx.beginPath();
+                octx.arc(r, r, r, 0, Math.PI * 2);
+                octx.fill();
+                return off;
+            }
+
+            function setupCanvas(canvas, palette, key) {
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
                 let w = 0, h = 0, dpr = 1;
 
+                const spriteA = makeGlowSprite(palette.hueA);
+                const spriteB = makeGlowSprite(palette.hueB);
+
                 function resize() {
-                    dpr = window.devicePixelRatio || 1;
+                    dpr = Math.min(window.devicePixelRatio || 1, 2);
                     w = window.innerWidth;
                     h = window.innerHeight;
                     canvas.width = w * dpr;
@@ -13150,7 +13182,8 @@ updateAboutToggleButton();
                     };
                 }
 
-                const count = 70;
+                const isMobile = (typeof window.isMobileUI === 'function') && window.isMobileUI();
+                const count = isMobile ? 42 : 70;
                 const particles = [];
                 for (let i = 0; i < count; i++) particles.push(spawnParticle(true));
 
@@ -13173,8 +13206,18 @@ updateAboutToggleButton();
                     ctx.restore();
                 }
 
+                function isActive() {
+                    return !!(window.__bgCanvasActive && window.__bgCanvasActive[key]);
+                }
+
                 let lastT = null;
                 function draw(t) {
+                    if (!isActive()) {
+                        lastT = null;
+                        requestAnimationFrame(draw);
+                        return;
+                    }
+
                     if (lastT === null) lastT = t;
                     const dt = Math.min((t - lastT) / 1000, 0.05);
                     lastT = t;
@@ -13204,13 +13247,11 @@ updateAboutToggleButton();
                         const alpha = p.maxAlpha * fade;
                         if (alpha <= 0.005) continue;
 
-                        const glow = ctx.createRadialGradient(px, py, 0, px, py, p.size * 6.5);
-                        glow.addColorStop(0, 'rgba(' + p.hue + ',' + (alpha * 0.45) + ')');
-                        glow.addColorStop(1, 'rgba(' + p.hue + ',0)');
-                        ctx.fillStyle = glow;
-                        ctx.beginPath();
-                        ctx.arc(px, py, p.size * 6.5, 0, Math.PI * 2);
-                        ctx.fill();
+                        const glowR = p.size * 6.5;
+                        const sprite = (p.hue === palette.hueA) ? spriteA : spriteB;
+                        ctx.globalAlpha = alpha;
+                        ctx.drawImage(sprite, px - glowR, py - glowR, glowR * 2, glowR * 2);
+                        ctx.globalAlpha = 1;
 
                         ctx.fillStyle = 'rgba(' + p.hue + ',' + alpha + ')';
                         ctx.beginPath();
@@ -13233,7 +13274,7 @@ updateAboutToggleButton();
                 rMax: 6,
                 alphaMin: 0.35,
                 alphaMax: 0.9
-            });
+            }, 'dark');
 
             setupCanvas(document.getElementById('light-theme-video'), {
                 bgStops: [[0, '#ffffff'], [0.3, '#f2f7fc'], [0.55, '#dfebf7'], [0.8, '#c2daf0'], [1, '#a9c8e8']],
@@ -13244,7 +13285,7 @@ updateAboutToggleButton();
                 rMax: 6,
                 alphaMin: 0.3,
                 alphaMax: 0.65
-            });
+            }, 'light');
         })();
 
         if ('requestIdleCallback' in window) {
