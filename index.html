@@ -5884,7 +5884,10 @@ body.light-theme .rounded-border13 {
         box-sizing: border-box !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        overflow: hidden !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
     }
 
     body:not(.light-theme) .bg-canvas {
@@ -5893,14 +5896,14 @@ body.light-theme .rounded-border13 {
 
     #home > div:first-child {
         width: 100% !important;
-        height: 100% !important;
-        min-height: 0 !important;
+        height: auto !important;
+        min-height: 100% !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
+        overflow: visible !important;
     }
 
     #home > div:first-child > .title,
@@ -6010,6 +6013,19 @@ body.light-theme .rounded-border13 {
     .home-clock-panel {
         width: calc(100vw - 36px) !important;
         max-width: 360px !important;
+        top: auto !important;
+        bottom: calc(100% + 12px) !important;
+        transform: translateX(-50%) translateY(8px) !important;
+        z-index: 6001 !important;
+        max-height: min(60svh, 420px) !important;
+    }
+
+    .home-clock-widget.open .home-clock-panel {
+        transform: translateX(-50%) translateY(0) !important;
+    }
+
+    .home-clock-panel-list {
+        max-height: min(45svh, 320px) !important;
     }
 
     .mobile-home-actions {
@@ -15888,6 +15904,11 @@ document.addEventListener('dragstart', function(e) {
             widget.classList.add('open');
             trigger.setAttribute('aria-expanded', 'true');
             adjustPanelHeight();
+            if (window.isMobileUI && window.isMobileUI()) {
+                setTimeout(function () {
+                    panelEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                }, 60);
+            }
         }
         function closePanel() {
             widget.classList.remove('open');
