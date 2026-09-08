@@ -1,3 +1,4 @@
+<!-- MOBILE ABOUT / HOBBIES LAYER 1 FINAL PATCH: shared shutter + accordion + helpers -->
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -12256,7 +12257,11 @@ function buildAbout2MetroStations() {
                 grid.querySelectorAll('.about2-metro-station-photo-wrap.mobile-revealed').forEach(w => {
                     w.classList.remove('mobile-revealed');
                 });
-                if (!wasRevealed) photoWrap.classList.add('mobile-revealed');
+                if (wasRevealed) {
+                    openAbout2MetroStation(index);
+                } else {
+                    photoWrap.classList.add('mobile-revealed');
+                }
                 return;
             }
 
