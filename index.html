@@ -1,4 +1,3 @@
-<!-- MOBILE ABOUT / HOBBIES LAYER 1 FINAL PATCH: shared shutter + accordion + helpers -->
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -26,12 +25,7 @@
     </script>
 
     <script>
-    // Shared RAF-throttled resize dispatcher.
-    // Android fires many more 'resize' events than iOS while the address bar
-    // shows/hides during scroll. Without throttling, every registered handler
-    // below re-runs on each of those events, which is what caused the visible
-    // jank/"freezing" on Android. All handlers now register here instead of
-    // adding their own raw 'resize' listener, and run at most once per frame.
+    
     (function () {
         var handlers = [];
         var scheduled = false;
