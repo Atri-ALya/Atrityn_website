@@ -9804,6 +9804,9 @@ body.light-theme .rounded-border13 {
     .about2-expand-frame.has-artist .about2-marquee-dup { display: inline-block; }
 }
 </style>
+<style id="o4u-bg-v1">
+.about2-expand-frame[data-artist-layer="4"] .about2-artist-side-decor { display: none !important; }
+</style>
 </head>
 
 <body>
@@ -11696,8 +11699,14 @@ function setAboutArtistLayer(layer, animate) {
     const prevLayer = about2ArtistLayer;
     about2ArtistLayer = layer;
 
+    const frameBgImg = document.getElementById('about2ExpandImg');
+    const bgChanges = !!frameBgImg && window.isMobileUI() && ((layer === 4) !== (prevLayer === 4));
+
     function applyState() {
         photo.src = photoSrc[layer];
+        if (frameBgImg && window.isMobileUI()) {
+            frameBgImg.src = (layer === 4) ? ABOUT2_O4U_MOBILE_BG : ABOUT2_ARTIST_MOBILE_BG;
+        }
         Object.keys(lists).forEach(key => {
             lists[key].style.display = (Number(key) === layer) ? 'flex' : 'none';
         });
@@ -11727,6 +11736,10 @@ function setAboutArtistLayer(layer, animate) {
     const outgoing = lists[prevLayer] || list1;
     const incoming = lists[layer];
 
+    if (bgChanges) {
+        frameBgImg.style.transition = 'opacity ' + outMs + 'ms ' + ease;
+        frameBgImg.style.opacity = '0';
+    }
     photo.style.transition = 'opacity ' + outMs + 'ms ' + ease;
     photo.style.opacity = '0';
     outgoing.style.transition = 'opacity ' + outMs + 'ms ' + ease;
@@ -11767,6 +11780,10 @@ function setAboutArtistLayer(layer, animate) {
         const startFadeIn = () => {
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
+                    if (bgChanges) {
+                        frameBgImg.style.transition = 'opacity ' + inMs + 'ms ' + ease;
+                        frameBgImg.style.opacity = '1';
+                    }
                     photo.style.transition = 'opacity ' + inMs + 'ms ' + ease;
                     photo.style.opacity = '1';
                     incoming.style.transition = 'opacity ' + inMs + 'ms ' + ease;
@@ -12593,6 +12610,9 @@ function closeAbout2SkinViewer(e) {
 let about2ArtistLayer = 1;
 let about2ArtistLayerAnimating = false;
 
+const ABOUT2_ARTIST_MOBILE_BG = 'assets/AllScreenshorts/screenshot 4_mobile.png';
+const ABOUT2_O4U_MOBILE_BG = 'assets/AllScreenshorts/O4U_mobile.png';
+
 const about2ArtistPhotoSrc = {
     1: 'assets/AllScreenshorts/screenshot_4_1.png',
     2: 'assets/AllScreenshorts/screenshot_4_2.png',
@@ -12604,6 +12624,8 @@ let about2ArtistPhotosPreloadPromise = null;
 
 function preloadAboutArtistPhotos() {
     if (about2ArtistPhotosPreloadPromise) return about2ArtistPhotosPreloadPromise;
+
+    if (window.isMobileUI && window.isMobileUI()) { const bgPre = new Image(); bgPre.src = ABOUT2_O4U_MOBILE_BG; }
 
     const loaders = Object.keys(about2ArtistPhotoSrc).map((key) => {
         return new Promise((resolve) => {
