@@ -9784,6 +9784,26 @@ body.light-theme .rounded-border13 {
     }
 }
 </style>
+<style id="about2-marquee-v1">
+.about2-marquee { display: inline; }
+.about2-marquee-dup { display: none; }
+@media screen and (max-width: 900px), screen and (hover: none) and (pointer: coarse) {
+    .about2-expand-frame.has-artist .about2-track-name {
+        text-overflow: clip !important;
+        padding-left: 6px;
+        margin-left: -6px;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6px, #000 calc(100% - 16px), transparent 100%);
+        mask-image: linear-gradient(90deg, transparent 0, #000 6px, #000 calc(100% - 16px), transparent 100%);
+    }
+    .about2-expand-frame.has-artist .about2-marquee {
+        display: inline-flex;
+        white-space: nowrap;
+        will-change: transform;
+    }
+    .about2-expand-frame.has-artist .about2-marquee-item { flex: none; display: inline-block; }
+    .about2-expand-frame.has-artist .about2-marquee-dup { display: inline-block; }
+}
+</style>
 </head>
 
 <body>
@@ -12656,6 +12676,57 @@ window.toggleAbout2O4UPage = function (event) {
     }, 190);
 };
 
+const about2MarqueeMQ = window.matchMedia('(max-width: 900px), (hover: none) and (pointer: coarse)');
+const about2MarqueeEls = new Set();
+const ABOUT2_MARQUEE_PAD = 6;
+const ABOUT2_MARQUEE_PAUSE = 2.5;
+const ABOUT2_MARQUEE_SPEED = 35;
+
+function about2UpdateMarquee(nameEl) {
+    const mq = nameEl.querySelector('.about2-marquee');
+    if (!mq) return;
+    const item = mq.firstElementChild;
+    const dup = mq.lastElementChild;
+    if (mq._anim) { mq._anim.cancel(); mq._anim = null; }
+    item.style.paddingRight = '';
+    dup.style.paddingRight = '';
+    if (!about2MarqueeMQ.matches || !mq.animate) return;
+    const cw = nameEl.clientWidth - ABOUT2_MARQUEE_PAD;
+    if (cw <= 0) return;
+    item.style.paddingRight = '0px';
+    const tw = item.getBoundingClientRect().width;
+    if (tw <= 0) return;
+    const gap = Math.max(36, Math.ceil(cw - tw));
+    item.style.paddingRight = gap + 'px';
+    dup.style.paddingRight = gap + 'px';
+    const travel = tw + gap;
+    const total = ABOUT2_MARQUEE_PAUSE + travel / ABOUT2_MARQUEE_SPEED;
+    const p = ABOUT2_MARQUEE_PAUSE / total;
+    mq._anim = mq.animate([
+        { transform: 'translateX(0)', offset: 0 },
+        { transform: 'translateX(0)', offset: p },
+        { transform: 'translateX(-' + travel + 'px)', offset: 1 }
+    ], { duration: total * 1000, iterations: Infinity, easing: 'linear' });
+}
+
+const about2MarqueeRO = (typeof ResizeObserver !== 'undefined')
+    ? new ResizeObserver(function (entries) { entries.forEach(function (e) { about2UpdateMarquee(e.target); }); })
+    : null;
+
+function about2AttachMarquee(nameEl) {
+    if (!nameEl) return;
+    about2MarqueeEls.add(nameEl);
+    if (about2MarqueeRO) about2MarqueeRO.observe(nameEl);
+    about2UpdateMarquee(nameEl);
+}
+
+function about2RefreshAllMarquees() {
+    about2MarqueeEls.forEach(about2UpdateMarquee);
+}
+if (about2MarqueeMQ.addEventListener) about2MarqueeMQ.addEventListener('change', about2RefreshAllMarquees);
+else if (about2MarqueeMQ.addListener) about2MarqueeMQ.addListener(about2RefreshAllMarquees);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(about2RefreshAllMarquees);
+
 function buildAbout2TrackList(containerId, tracks) {
     const list = document.getElementById(containerId);
     if (!list || list.dataset.built) return;
@@ -12674,7 +12745,7 @@ function buildAbout2TrackList(containerId, tracks) {
                 '</button>' +
             '</div>' +
             '<div class="about2-track-meta">' +
-                '<div class="about2-track-name">' + track.artist + ' — ' + track.title + '</div>' +
+                '<div class="about2-track-name"><span class="about2-marquee"><span class="about2-marquee-item">' + track.artist + ' — ' + track.title + '</span><span class="about2-marquee-item about2-marquee-dup" aria-hidden="true">' + track.artist + ' — ' + track.title + '</span></span></div>' +
                 '<div class="about2-track-time" id="about2-time-' + track.id + '">00:00 / ' + (track.duration || '00:00') + '</div>' +
                 '<div class="about2-track-seek" id="about2-seek-' + track.id + '">' +
                     '<div class="about2-track-seek-buffered" id="about2-seek-buffered-' + track.id + '"></div>' +
@@ -12801,6 +12872,7 @@ function buildAbout2TrackList(containerId, tracks) {
         });
 
         list.appendChild(item);
+        about2AttachMarquee(item.querySelector('.about2-track-name'));
     });
 
     buildMiniPlayer();
