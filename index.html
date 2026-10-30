@@ -9751,6 +9751,39 @@ body.light-theme .rounded-border13 {
     }
 }
 </style>
+<style id="o4u-layer-v1">
+#about2ExpandPlayer4 { top: 50%; transform: translateY(-50%); }
+#about2ExpandPlayer4[data-o4u-page="1"] .o4u-p2,
+#about2ExpandPlayer4[data-o4u-page="2"] .o4u-p1 { display: none; }
+.about2-o4u-more {
+    position: absolute;
+    right: -52px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.about2-o4u-more:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+.about2-o4u-more svg { transition: transform 0.25s ease; }
+#about2ExpandPlayer4[data-o4u-page="2"] .about2-o4u-more svg { transform: rotate(180deg); }
+@media screen and (max-width: 900px), screen and (hover: none) and (pointer: coarse) {
+    #about2ExpandPlayer4 .about2-track-item { display: flex !important; }
+    .about2-o4u-more { display: none !important; }
+    .about2-expand-frame.has-artist[data-artist-layer="4"] .about2-track-list {
+        padding-top: max(76px, calc(env(safe-area-inset-top) + 62px)) !important;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -10675,6 +10708,12 @@ body.light-theme .rounded-border13 {
 
         <div id="about2ExpandPlayer3" class="about2-track-list"></div>
 
+        <div id="about2ExpandPlayer4" class="about2-track-list" data-o4u-page="1">
+            <button type="button" id="about2O4UMoreBtn" class="about2-o4u-more" aria-label="Показать ещё 3 трека" onclick="window.toggleAbout2O4UPage && window.toggleAbout2O4UPage(event)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
+        </div>
+
         <div id="about2ArtistLinks" class="about2-artist-links">
             <a href="https://t.me/egornatstg" class="about2-artist-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Telegram</a>
             <a href="https://www.instagram.com/egornats" class="about2-artist-btn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Instagram</a>
@@ -10684,6 +10723,7 @@ body.light-theme .rounded-border13 {
             <button type="button" class="about2-artist-layer-pill" data-layer="1" aria-label="Слой 1" onclick="event.stopPropagation(); window.goToAboutArtistLayer && window.goToAboutArtistLayer(1);">1</button>
             <button type="button" class="about2-artist-layer-pill" data-layer="2" aria-label="Слой 2" onclick="event.stopPropagation(); window.goToAboutArtistLayer && window.goToAboutArtistLayer(2);">2</button>
             <button type="button" class="about2-artist-layer-pill" data-layer="3" aria-label="Слой 3" onclick="event.stopPropagation(); window.goToAboutArtistLayer && window.goToAboutArtistLayer(3);">3</button>
+            <button type="button" class="about2-artist-layer-pill" data-layer="4" aria-label="Слой 4" onclick="event.stopPropagation(); window.goToAboutArtistLayer && window.goToAboutArtistLayer(4);">4</button>
         </div>
 
         <div id="about2SkinsList" class="about2-skins-list"></div>
@@ -11196,6 +11236,7 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
     const player = document.getElementById('about2ExpandPlayer');
     const player2 = document.getElementById('about2ExpandPlayer2');
     const player3 = document.getElementById('about2ExpandPlayer3');
+    const player4 = document.getElementById('about2ExpandPlayer4');
     const skinsList = document.getElementById('about2SkinsList');
     const hobbyLinks = document.getElementById('about2HobbyLinks');
     const artistLinks = document.getElementById('about2ArtistLinks');
@@ -11273,11 +11314,16 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
         buildAbout2Player();
         buildAbout2Player2();
         buildAbout2Player3();
+        buildAbout2Player4();
 
         preloadAboutArtistPhotos();
 
         const activeTrack = about2CurrentTrackId ? findAbout2Track(about2CurrentTrackId) : null;
-        const initialLayer = (activeTrack && (activeTrack.layer === 2 || activeTrack.layer === 3)) ? activeTrack.layer : 1;
+        const initialLayer = (activeTrack && (activeTrack.layer === 2 || activeTrack.layer === 3 || activeTrack.layer === 4)) ? activeTrack.layer : 1;
+        if (activeTrack && activeTrack.layer === 4 && activeTrack.page) {
+            const o4uList = document.getElementById('about2ExpandPlayer4');
+            if (o4uList) o4uList.setAttribute('data-o4u-page', String(activeTrack.page));
+        }
         about2ArtistLayer = 0;
         setAboutArtistLayer(initialLayer, false);
 
@@ -11287,6 +11333,7 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
         player.style.display = 'none';
         player2.style.display = 'none';
         player3.style.display = 'none';
+        player4.style.display = 'none';
 
         if (item.id === 'a2-item2') {
             photo.src = 'assets/AllScreenshorts/screenshot_5_1.png';
@@ -11330,6 +11377,8 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
     player2.style.opacity = '0';
     player3.style.transition = 'none';
     player3.style.opacity = '0';
+    player4.style.transition = 'none';
+    player4.style.opacity = '0';
     skinsList.style.transition = 'none';
     skinsList.style.opacity = '0';
     hobbyLinks.style.transition = 'none';
@@ -11395,6 +11444,8 @@ function openAbout2Expand(item, rectOverride, radiusOverride) {
             player2.style.opacity = '1';
             player3.style.transition = 'opacity 0.35s ease 0.55s';
             player3.style.opacity = '1';
+            player4.style.transition = 'opacity 0.35s ease 0.55s';
+            player4.style.opacity = '1';
 
             skinsList.style.transition = 'opacity 0.35s ease 0.55s';
             skinsList.style.opacity = '1';
@@ -11441,6 +11492,7 @@ function closeAbout2Expand() {
     const player = document.getElementById('about2ExpandPlayer');
     const player2 = document.getElementById('about2ExpandPlayer2');
     const player3 = document.getElementById('about2ExpandPlayer3');
+    const player4 = document.getElementById('about2ExpandPlayer4');
     const skinsList = document.getElementById('about2SkinsList');
     const hobbyLinks = document.getElementById('about2HobbyLinks');
     const artistLinks = document.getElementById('about2ArtistLinks');
@@ -11488,6 +11540,8 @@ function closeAbout2Expand() {
     player2.style.opacity = '0';
     player3.style.transition = 'opacity 0.2s ease';
     player3.style.opacity = '0';
+    player4.style.transition = 'opacity 0.2s ease';
+    player4.style.opacity = '0';
     skinsList.style.transition = 'opacity 0.2s ease';
     skinsList.style.opacity = '0';
 
@@ -11569,6 +11623,7 @@ function closeAbout2Expand() {
         player.style.display = '';
         player2.style.display = '';
         player3.style.display = '';
+        player4.style.display = '';
 
         if (gallerySection) gallerySection.style.display = 'none';
         if (photoPanel) photoPanel.style.display = 'none';
@@ -11603,6 +11658,7 @@ function setAboutArtistLayer(layer, animate) {
     const list1 = document.getElementById('about2ExpandPlayer');
     const list2 = document.getElementById('about2ExpandPlayer2');
     const list3 = document.getElementById('about2ExpandPlayer3');
+    const list4 = document.getElementById('about2ExpandPlayer4');
 
     const caption = document.getElementById('about2ExpandCaption');
 
@@ -11611,9 +11667,9 @@ function setAboutArtistLayer(layer, animate) {
     const artistSideDecor = document.getElementById('about2ArtistSideDecor');
     const frame = document.getElementById('about2ExpandFrame');
     const layerPillButtons = document.querySelectorAll('#about2ArtistLayerPills .about2-artist-layer-pill');
-    if (!photo || !list1 || !list2 || !list3) return;
+    if (!photo || !list1 || !list2 || !list3 || !list4) return;
 
-    const lists = { 1: list1, 2: list2, 3: list3 };
+    const lists = { 1: list1, 2: list2, 3: list3, 4: list4 };
 
     const photoSrc = about2ArtistPhotoSrc;
 
@@ -11973,6 +12029,20 @@ const about2Tracks3 = [
     { id: 'a2t3-6', layer: 3, artist: 'Егор Натс', title: 'Правда', file: 'assets/Nats Treki/Pravda.mp3', cover: 'assets/Nats Oblojki/Pravda.png', color: '#071820', color2: '#c03b2c' },
     { id: 'a2t3-7', layer: 3, artist: 'Егор Натс', title: 'Тёплые руки', file: 'assets/Nats Treki/TioplyaeRuki.mp3', cover: 'assets/Nats Oblojki/TioplyaeRuki.png', color: '#b9a894', color2: '#860007' },
     { id: 'a2t3-8', layer: 3, artist: 'Егор Натс', title: 'Генетика', file: 'assets/Nats Treki/Genetika.mp3', cover: 'assets/Nats Oblojki/Genetika.png', color: '#f61084', color2: '#f93c5a' },
+];
+
+const about2Tracks4 = [
+    { id: 'a2t4-1', layer: 4, page: 1, artist: 'Егор Натс', title: 'Губы', duration: '02:30', file: 'assets/Nats Treki/O4U/Lips.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-2', layer: 4, page: 1, artist: 'Егор Натс', title: 'Ты оч секси', duration: '01:59', file: 'assets/Nats Treki/O4U/Youverysexy.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-3', layer: 4, page: 1, artist: 'Егор Натс', title: 'DIOR', duration: '02:30', file: 'assets/Nats Treki/O4U/DIOR.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-4', layer: 4, page: 1, artist: 'Егор Натс', title: 'ИдиНахуй', duration: '02:40', file: 'assets/Nats Treki/O4U/FuckYou.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-5', layer: 4, page: 1, artist: 'Егор Натс', title: 'Реально', duration: '02:13', file: 'assets/Nats Treki/O4U/Really.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-6', layer: 4, page: 1, artist: 'Егор Натс', title: 'CFEн', duration: '02:49', file: 'assets/Nats Treki/O4U/CFEн.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-7', layer: 4, page: 1, artist: 'Егор Натс', title: 'Тучи', duration: '02:06', file: 'assets/Nats Treki/O4U/Clouds.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-8', layer: 4, page: 1, artist: 'Егор Натс', title: 'ТраТраТра', duration: '01:56', file: 'assets/Nats Treki/O4U/TraTraTra.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-9', layer: 4, page: 2, artist: 'Егор Натс', title: 'Ахуевший чел', duration: '01:37', file: 'assets/Nats Treki/O4U/fuckingcrazyguy.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-10', layer: 4, page: 2, artist: 'Егор Натс', title: 'Пресня 16 декабря', duration: '01:46', file: 'assets/Nats Treki/O4U/Presnya.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
+    { id: 'a2t4-11', layer: 4, page: 2, artist: 'Егор Натс', title: 'Все проебалось', duration: '02:01', file: 'assets/Nats Treki/O4U/Allfuckedup.mp3', cover: 'assets/Nats Oblojki/O4U.jpg' },
 ];
 
 const about2Skins = [
@@ -12506,7 +12576,8 @@ let about2ArtistLayerAnimating = false;
 const about2ArtistPhotoSrc = {
     1: 'assets/AllScreenshorts/screenshot_4_1.png',
     2: 'assets/AllScreenshorts/screenshot_4_2.png',
-    3: 'assets/AllScreenshorts/screenshot_4_3.png'
+    3: 'assets/AllScreenshorts/screenshot_4_3.png',
+    4: 'assets/AllScreenshorts/screenshot_4_4.png'
 };
 let about2ArtistPhotosReady = false;
 let about2ArtistPhotosPreloadPromise = null;
@@ -12542,7 +12613,7 @@ let about2CurrentAudio = null;
 let about2CurrentTrackId = null;
 
 function findAbout2Track(id) {
-    return about2Tracks.find(t => t.id === id) || about2Tracks2.find(t => t.id === id) || about2Tracks3.find(t => t.id === id);
+    return about2Tracks.find(t => t.id === id) || about2Tracks2.find(t => t.id === id) || about2Tracks3.find(t => t.id === id) || about2Tracks4.find(t => t.id === id);
 }
 
 function formatAbout2Time(sec) {
@@ -12564,6 +12635,27 @@ function buildAbout2Player3() {
     buildAbout2TrackList('about2ExpandPlayer3', about2Tracks3);
 }
 
+function buildAbout2Player4() {
+    buildAbout2TrackList('about2ExpandPlayer4', about2Tracks4);
+}
+
+window.toggleAbout2O4UPage = function (event) {
+    if (event) event.stopPropagation();
+    const list = document.getElementById('about2ExpandPlayer4');
+    const btn = document.getElementById('about2O4UMoreBtn');
+    if (!list || list.__o4uBusy) return;
+    list.__o4uBusy = true;
+    list.style.transition = 'opacity 0.18s ease';
+    list.style.opacity = '0';
+    setTimeout(function () {
+        const next = list.getAttribute('data-o4u-page') === '1' ? '2' : '1';
+        list.setAttribute('data-o4u-page', next);
+        if (btn) btn.setAttribute('aria-label', next === '1' ? 'Показать ещё 3 трека' : 'Назад к первым трекам');
+        list.style.opacity = '1';
+        list.__o4uBusy = false;
+    }, 190);
+};
+
 function buildAbout2TrackList(containerId, tracks) {
     const list = document.getElementById(containerId);
     if (!list || list.dataset.built) return;
@@ -12571,7 +12663,7 @@ function buildAbout2TrackList(containerId, tracks) {
 
     tracks.forEach(track => {
         const item = document.createElement('div');
-        item.className = 'about2-track-item';
+        item.className = 'about2-track-item' + (track.page ? ' o4u-p' + track.page : '');
         item.id = 'about2-' + track.id;
         item.innerHTML =
             '<div class="about2-track-cover-wrap">' +
@@ -12583,7 +12675,7 @@ function buildAbout2TrackList(containerId, tracks) {
             '</div>' +
             '<div class="about2-track-meta">' +
                 '<div class="about2-track-name">' + track.artist + ' — ' + track.title + '</div>' +
-                '<div class="about2-track-time" id="about2-time-' + track.id + '">00:00 / 00:00</div>' +
+                '<div class="about2-track-time" id="about2-time-' + track.id + '">00:00 / ' + (track.duration || '00:00') + '</div>' +
                 '<div class="about2-track-seek" id="about2-seek-' + track.id + '">' +
                     '<div class="about2-track-seek-buffered" id="about2-seek-buffered-' + track.id + '"></div>' +
                     '<div class="about2-track-seek-fill" id="about2-seek-fill-' + track.id + '"></div>' +
@@ -12885,7 +12977,7 @@ function about2HasCurrentTrack() {
 }
 
 function about2CancelBackgroundLoads(exceptAudio) {
-    const allTracks = about2Tracks.concat(about2Tracks2, about2Tracks3);
+    const allTracks = about2Tracks.concat(about2Tracks2, about2Tracks3, about2Tracks4);
     allTracks.forEach((t) => {
         const a = t._audio;
         if (!a || a === exceptAudio) return;
@@ -13658,7 +13750,7 @@ window.addEventListener('wheel', (event) => {
         const frame = document.getElementById('about2ExpandFrame');
 
         if (frame && about2ExpandItemId === 'a2-item1' && frame.classList.contains('has-photo') && !about2ArtistLayerAnimating) {
-            if (event.deltaY > 0 && about2ArtistLayer < 3) {
+            if (event.deltaY > 0 && about2ArtistLayer < 4) {
                 setAboutArtistLayer(about2ArtistLayer + 1, true);
             } else if (event.deltaY < 0 && about2ArtistLayer > 1) {
                 setAboutArtistLayer(about2ArtistLayer - 1, true);
