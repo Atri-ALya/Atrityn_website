@@ -9807,6 +9807,11 @@ body.light-theme .rounded-border13 {
 <style id="o4u-bg-v1">
 .about2-expand-frame[data-artist-layer="4"] .about2-artist-side-decor { display: none !important; }
 </style>
+<style id="o4u-desktop-scrim-v1">
+.about2-expand-frame[data-artist-layer="4"] .about2-expand-scrim {
+    background-color: var(--o4u-scrim, rgba(58, 58, 58, 0.82));
+}
+</style>
 </head>
 
 <body>
@@ -11700,12 +11705,16 @@ function setAboutArtistLayer(layer, animate) {
     about2ArtistLayer = layer;
 
     const frameBgImg = document.getElementById('about2ExpandImg');
-    const bgChanges = !!frameBgImg && window.isMobileUI() && ((layer === 4) !== (prevLayer === 4));
+    const bgChanges = !!frameBgImg && ((layer === 4) !== (prevLayer === 4));
 
     function applyState() {
         photo.src = photoSrc[layer];
-        if (frameBgImg && window.isMobileUI()) {
-            frameBgImg.src = (layer === 4) ? ABOUT2_O4U_MOBILE_BG : ABOUT2_ARTIST_MOBILE_BG;
+        if (frameBgImg) {
+            if (window.isMobileUI()) {
+                frameBgImg.src = (layer === 4) ? ABOUT2_O4U_MOBILE_BG : ABOUT2_ARTIST_MOBILE_BG;
+            } else {
+                frameBgImg.src = (layer === 4) ? ABOUT2_O4U_DESKTOP_BG : ABOUT2_ARTIST_DESKTOP_BG;
+            }
         }
         Object.keys(lists).forEach(key => {
             lists[key].style.display = (Number(key) === layer) ? 'flex' : 'none';
@@ -12612,6 +12621,44 @@ let about2ArtistLayerAnimating = false;
 
 const ABOUT2_ARTIST_MOBILE_BG = 'assets/AllScreenshorts/screenshot 4_mobile.png';
 const ABOUT2_O4U_MOBILE_BG = 'assets/AllScreenshorts/O4U_mobile.png';
+const ABOUT2_ARTIST_DESKTOP_BG = 'assets/AllScreenshorts/screenshot 4.png';
+const ABOUT2_O4U_DESKTOP_BG = 'assets/AllScreenshorts/screenshot_4_4.png';
+
+let about2O4UScrimPromise = null;
+function about2LoadO4UScrim() {
+    if (about2O4UScrimPromise) return about2O4UScrimPromise;
+    about2O4UScrimPromise = new Promise(function (resolve) {
+        const cover = (typeof about2Tracks4 !== 'undefined' && about2Tracks4[0]) ? about2Tracks4[0].cover : null;
+        if (!cover) { resolve(); return; }
+        const img = new Image();
+        img.onload = function () {
+            try {
+                const size = 32;
+                const canvas = document.createElement('canvas');
+                canvas.width = size; canvas.height = size;
+                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                ctx.drawImage(img, 0, 0, size, size);
+                const d = ctx.getImageData(0, 0, size, size).data;
+                let r = 0, g = 0, b = 0, n = 0;
+                for (let i = 0; i < d.length; i += 4) {
+                    if (d[i + 3] < 200) continue;
+                    r += d[i]; g += d[i + 1]; b += d[i + 2]; n++;
+                }
+                if (n) {
+                    r /= n; g /= n; b /= n;
+                    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+                    const k = 0.35, dark = 0.5;
+                    const f = function (c) { return Math.max(0, Math.min(255, Math.round((lum + (c - lum) * k) * dark))); };
+                    document.documentElement.style.setProperty('--o4u-scrim', 'rgba(' + f(r) + ', ' + f(g) + ', ' + f(b) + ', 0.82)');
+                }
+            } catch (err) { }
+            resolve();
+        };
+        img.onerror = function () { resolve(); };
+        img.src = cover;
+    });
+    return about2O4UScrimPromise;
+}
 
 const about2ArtistPhotoSrc = {
     1: 'assets/AllScreenshorts/screenshot_4_1.png',
@@ -12625,7 +12672,8 @@ let about2ArtistPhotosPreloadPromise = null;
 function preloadAboutArtistPhotos() {
     if (about2ArtistPhotosPreloadPromise) return about2ArtistPhotosPreloadPromise;
 
-    if (window.isMobileUI && window.isMobileUI()) { const bgPre = new Image(); bgPre.src = ABOUT2_O4U_MOBILE_BG; }
+    { const bgPre = new Image(); bgPre.src = (window.isMobileUI && window.isMobileUI()) ? ABOUT2_O4U_MOBILE_BG : ABOUT2_O4U_DESKTOP_BG; }
+    about2LoadO4UScrim();
 
     const loaders = Object.keys(about2ArtistPhotoSrc).map((key) => {
         return new Promise((resolve) => {
