@@ -25,14 +25,6 @@
     </script>
 
     <script>
-    /*
-     * Perf-tier detection.
-     * 4 levels: 1 = top-end, 2 = good (iPhone 15-class and similar), 3 = medium
-     * (Redmi 9-class), 4 = low-end. Combines cheap hardware signals available
-     * at load time with a one-off runtime FPS check that can downgrade the
-     * tier later if the initial guess was too optimistic (e.g. an Android
-     * device that doesn't expose navigator.deviceMemory).
-     */
     (function () {
         function detectPerfTier() {
             try {
@@ -40,40 +32,32 @@
                 var isIOS = /iP(hone|ad|od)/.test(ua);
                 var isAndroid = /Android/.test(ua);
                 var cores = navigator.hardwareConcurrency || 4;
-                var mem = navigator.deviceMemory; // GB RAM; undefined on iOS/Safari
+                var mem = navigator.deviceMemory;
 
                 var mobile = (typeof window.isMobileUI === 'function')
                     ? window.isMobileUI()
                     : (window.innerWidth <= 900);
 
                 if (!mobile) {
-                    // Desktop / laptop: assume plenty of headroom unless the
-                    // CPU itself reports very few cores.
                     return (cores <= 2) ? 3 : 1;
                 }
 
                 if (isIOS) {
-                    // No deviceMemory on iOS. Modern iPhones (iPhone 15-class
-                    // and newer) are "good" by default; only very old/low-core
-                    // devices get bumped down.
                     return (cores && cores <= 2) ? 3 : 2;
                 }
 
                 if (isAndroid) {
                     if (typeof mem === 'number') {
                         if (mem <= 2) return 4;
-                        if (mem <= 4) return 3;   // Redmi 9-class lands here
+                        if (mem <= 4) return 3;
                         if (mem <= 6) return 2;
                         return 1;
                     }
-                    // deviceMemory unsupported (e.g. Firefox for Android):
-                    // fall back to core count only.
                     if (cores <= 4) return 3;
                     if (cores <= 6) return 2;
                     return 1;
                 }
 
-                // Unknown mobile platform: safe middle default.
                 return 2;
             } catch (e) {
                 return 2;
@@ -102,7 +86,6 @@
                     }));
                 } catch (e) {}
             },
-            // Step down exactly one level (used by the runtime FPS check).
             downgrade: function (reason) {
                 if (tier < 4) window.PerfTier.set(tier + 1, reason);
             }
@@ -188,26 +171,12 @@
     --stage-height: 1080px;
 }
 
-/*
- * Perf-tier CSS overrides.
- * html.perf-tier-1 = top-end, .perf-tier-2 = good, .perf-tier-3 = medium
- * (Redmi 9-class), .perf-tier-4 = low-end. Class is set synchronously in
- * <head> before first paint (see the perf-tier detection script above),
- * so there is no flash of the heavier styling.
- *
- * backdrop-filter/blur is one of the most expensive compositing operations
- * on mid/low-end Android GPUs, so it is dropped entirely on tiers 3-4;
- * elements already have a semi-opaque background behind it, so this only
- * removes the blur, not the panel itself.
- */
 html.perf-tier-3 *,
 html.perf-tier-4 * {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
 
-/* On the lowest tier, also shorten/simplify generic transitions so
-   interactions feel snappier instead of fighting the renderer. */
 html.perf-tier-4 * {
     transition-duration: 0.15s !important;
 }
@@ -13321,10 +13290,6 @@ function syncTrackVolumeUI(track) {
     if (slider && wrap) updateVolumeControlUI(slider, wrap, track._audio);
 }
 
-// --- Media Session (native iOS/Android "Now Playing" widget) ---
-// Feeds title/artist/cover art into the OS-level media controls
-// (Control Center, lock screen, Dynamic Island, Android notification)
-// so they show real track info instead of a generic speaker icon.
 var mediaSessionActionsReady = false;
 
 function setupMediaSessionActions() {
@@ -13357,12 +13322,6 @@ function applyMediaSessionMetadata(track) {
     if (!('mediaSession' in navigator)) return;
     setupMediaSessionActions();
 
-    // iOS is strict about this being set synchronously, in the same call
-    // stack as the user gesture that started playback (audio.play()) —
-    // an async update (e.g. waiting on an Image() to load first) can be
-    // silently ignored by Control Center / Dynamic Island.
-    // Resolving through the URL constructor gives an absolute, properly
-    // percent-encoded URL (our cover paths contain spaces).
     var artworkUrl = track.cover ? new URL(track.cover, window.location.href).href : null;
 
     try {
@@ -13615,9 +13574,6 @@ updateAboutToggleButton();
         (function initBgCanvas() {
             window.__bgCanvasActive = window.__bgCanvasActive || { dark: true, light: false };
 
-            // Particle count and DPR cap per perf tier. Even on the lowest
-            // tier we keep a small handful of particles rather than turning
-            // the effect off entirely.
             var TIER_PARTICLE_COUNT = { 1: 70, 2: 55, 3: 22, 4: 10 };
             var TIER_DPR_CAP = { 1: 2, 2: 2, 3: 1.25, 4: 1 };
 
@@ -13627,11 +13583,6 @@ updateAboutToggleButton();
                     : 2;
             }
 
-            // Runs once across both canvases (dark/light). Measures real
-            // frame time for the first ~1.5s of actual drawing and, if the
-            // device can't keep up with what the tier guess assumed, steps
-            // the tier down by one level so both canvases pick up fewer
-            // particles / lower DPR without a page reload.
             var fpsCalibration = { done: false, frames: 0, elapsed: 0 };
             function feedFpsCalibration(dt) {
                 if (fpsCalibration.done) return;
@@ -13672,8 +13623,6 @@ updateAboutToggleButton();
                 const spriteB = makeGlowSprite(palette.hueB);
 
                 function resize() {
-                    // Backing-store resolution is capped harder on weaker
-                    // perf tiers, since it directly drives fill-rate cost.
                     var dprCap = TIER_DPR_CAP[currentTier()] || 2;
                     dpr = Math.min(window.devicePixelRatio || 1, dprCap);
                     w = window.innerWidth;
@@ -13688,8 +13637,6 @@ updateAboutToggleButton();
                 } else {
                     window.addEventListener('resize', resize);
                 }
-                // A tier downgrade (from the FPS check) should also shrink
-                // the backing store immediately, not just future resizes.
                 document.addEventListener('perftierchange', resize);
 
                 function rand(min, max) { return min + Math.random() * (max - min); }
@@ -13717,9 +13664,6 @@ updateAboutToggleButton();
                     particles.push(spawnParticle(true));
                 }
 
-                // Keep the particle count in sync with the tier, e.g. after
-                // an FPS-triggered downgrade. Grows or shrinks the array in
-                // place rather than resetting it, so the effect doesn't jump.
                 function syncParticleCount() {
                     const target = TIER_PARTICLE_COUNT[currentTier()] || 55;
                     while (particles.length > target) particles.pop();
